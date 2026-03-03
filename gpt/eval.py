@@ -66,6 +66,7 @@ class EvalConfig:
     max_batches: int = 0  # 0 = full
     checkpoint: str = "gpt/checkpoints/ckpt_last.pt"
     use_ckpt_config: bool = True
+    save_to_checkpoint: bool = True
 
 
 def resolve_path(path_str: str) -> Path:
@@ -180,11 +181,14 @@ def parse_args() -> EvalConfig:
     p.add_argument("--checkpoint", type=str, default=EvalConfig.checkpoint)
     p.add_argument("--use_ckpt_config", dest="use_ckpt_config", action="store_true")
     p.add_argument("--no_use_ckpt_config", dest="use_ckpt_config", action="store_false")
+    p.add_argument("--save_to_checkpoint", dest="save_to_checkpoint", action="store_true")
+    p.add_argument("--no_save_to_checkpoint", dest="save_to_checkpoint", action="store_false")
     p.set_defaults(
         bias=EvalConfig.bias,
         pin_memory=EvalConfig.pin_memory,
         amp=EvalConfig.amp,
         use_ckpt_config=EvalConfig.use_ckpt_config,
+        save_to_checkpoint=EvalConfig.save_to_checkpoint,
     )
     args = p.parse_args()
     return EvalConfig(**vars(args))
@@ -296,14 +300,33 @@ def main() -> None:
 
     elapsed = time.time() - start
     tps = total_tokens / max(elapsed, 1e-8)
+    eval_result = {
+        "avg_loss": float(avg_loss),
+        "ppl": float(ppl),
+        "tokens": int(total_tokens),
+        "tokens_per_s": float(tps),
+        "evaluated_at": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
+    }
+
+    if cfg.save_to_checkpoint:
+        if not isinstance(ckpt, dict):
+            raise RuntimeError("Cannot save eval result: checkpoint format must be a dict.")
+        history = ckpt.get("eval_history")
+        if not isinstance(history, list):
+            history = []
+        history.append(eval_result)
+        ckpt["eval_history"] = history
+        ckpt["last_eval"] = eval_result
+        torch.save(ckpt, ckpt_path)
+        print(f"Saved eval result to checkpoint: {ckpt_path}")
 
     print(
         "Eval result:",
         {
-            "avg_loss": round(avg_loss, 6),
-            "ppl": round(ppl, 6) if math.isfinite(ppl) else "inf",
-            "tokens": int(total_tokens),
-            "tokens_per_s": int(tps),
+            "avg_loss": round(eval_result["avg_loss"], 6),
+            "ppl": round(eval_result["ppl"], 6) if math.isfinite(eval_result["ppl"]) else "inf",
+            "tokens": eval_result["tokens"],
+            "tokens_per_s": int(eval_result["tokens_per_s"]),
         },
     )
 
