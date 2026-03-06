@@ -1,4 +1,5 @@
-# Python
+# Python virtual environments
+venv/
 venv312/
 __pycache__/
 *.pyc
@@ -11,6 +12,21 @@ __pycache__/
 dist/
 build/
 *.log
+
+# Data files
+*.pt
+*.pth
+*.ckpt
+
+# Large binary data files
+*.bin
+gpt/CutSequences/*.bin
+data/Token/data/corpus_cleaned.txt
+
+# Large data files
+data/Token/data/enwiki_*/
+data/TokenizeCorpus/data_tokBERT/
+data/TokenizeCorpus/data_tokGPT/
 
 # MATLAB
 *.asv
@@ -25,6 +41,7 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+*~
 
 # Temporary files
 *.tmp
