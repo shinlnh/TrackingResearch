@@ -29,3 +29,7 @@ Thumbs.db
 # Temporary files
 *.tmp
 tmp_test.mat
+
+# Local datasets and rerun logs
+/otb100/*
+/otb100result/**/rerun_*.log
