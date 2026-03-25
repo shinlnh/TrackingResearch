@@ -1,0 +1,2 @@
+tracker,dataset,valid_sequences,AUC,Precision,Success50,FPS_avg_seq,FPS_median_seq,FPS_weighted_by_frames,total_frames,total_time_sec
+ECO_embed_v2_subset_run922,OTB,22,61.73611831665039,82.69476318359375,77.10640716552734,65.98675953317039,67.9062162129162,72.01837970049316,10673,148.19827999999998

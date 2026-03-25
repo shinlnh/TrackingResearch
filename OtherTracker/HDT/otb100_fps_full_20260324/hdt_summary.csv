@@ -1,0 +1,2 @@
+tracker,source,status,valid_sequences,fps_avg_seq,fps_median_seq,fps_global,fps_weighted_by_frames,total_frames,total_time_sec
+HDT,local_matlab_otb,ok,100,3.06175498683082,3.42400056090267,3.06175498683082,2.22689437151405,59035,26510.0135665

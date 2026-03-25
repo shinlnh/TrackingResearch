@@ -1,0 +1,2 @@
+tracker,valid_sequences,fps_avg_seq,fps_median_seq,fps_global,fps_weighted_by_frames,total_frames,total_time_sec
+CSRT,100,86.3102142563401,76.63137523778104,86.3102142563401,75.69397348794541,59035,779.9167791000109

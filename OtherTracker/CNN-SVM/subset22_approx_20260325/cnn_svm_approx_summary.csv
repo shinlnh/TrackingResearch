@@ -1,0 +1,2 @@
+tracker,backend,parameter,valid_sequences,fps_avg_seq,fps_median_seq,fps_global,fps_weighted_by_frames,total_frames,total_time_sec
+CNN-SVM-Approx,torchvision_sgdsvm,alexnet_fc6_saliency,22,8.855606507971572,9.002131986148934,8.855606507971572,8.735909496407372,10673,1221.7388474994223

@@ -1,0 +1,2 @@
+tracker,dataset,valid_sequences,AUC,Precision,Success50,FPS_avg_seq,FPS_median_seq,FPS_weighted_by_frames,total_frames,total_time_sec
+MyECOTracker-eco-embed_v2-934,OTB,22,63.066505432128906,84.28194427490234,78.30974578857422,68.61064720409257,69.74031209421543,75.4541195545604,10673,141.45019599999998

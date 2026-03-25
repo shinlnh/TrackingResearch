@@ -1,5 +1,7 @@
 # Python
+venv/
 venv312/
+.venv/
 __pycache__/
 *.pyc
 *.pyo
@@ -31,5 +33,26 @@ Thumbs.db
 tmp_test.mat
 
 # Local datasets and rerun logs
+/otb100/
 /otb100/*
+/otb/otb100/
+/otb/otb-toolkit/sequences/archives/
+/OtherTracker/CCOT/sequences/
+/OtherTracker/ECO/sequences/
+/OtherTracker/DSST/code/sequences/
+/OtherTracker/SRDCF/SRDCF/sequences/
+/OtherTracker/SRDCFdecon/SRDCFdecon/sequences/
+/OtherTracker/MDNet/dataset/OTB/
+/OtherTracker/MDNet/dataset/VOT/
+/OtherTracker/PyMDNet/datasets/OTB/
+/OtherTracker/CCOT/external_libs/matconvnet/examples/fast_rcnn/datasets/
+/OtherTracker/CF2/external/matconvnet/examples/fast_rcnn/datasets/
 /otb100result/**/rerun_*.log
+/MyECOTracker/otb100result/**/rerun_*.log
+/OtherTracker/**/rerun_*.log
+
+# Large local pretrained weights kept out of GitHub
+/MyECOTracker/pytracking/pretrained_network/tomp50.pth.tar
+/OtherTracker/pytracking/pytracking/networks/tomp50.pth.tar
+/OtherTracker/CCOT/feature_extraction/networks/imagenet-vgg-m-2048.mat
+/OtherTracker/HDT/HDT/imagenet-vgg-verydeep-19.mat

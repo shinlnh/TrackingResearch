@@ -1,0 +1,2 @@
+tracker,source,status,valid_sequences,fps_avg_seq,fps_median_seq,fps_global,fps_weighted_by_frames,total_frames,total_time_sec
+CF2,local_matlab_otb,partial,1,3.80968923319789,3.80968923319789,3.80968923319789,3.80968923319789,113,29.661212

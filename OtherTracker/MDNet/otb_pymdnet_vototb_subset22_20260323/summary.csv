@@ -1,0 +1,2 @@
+tracker,parameter,scope,valid_sequences,AUC,Precision,Success50,FPS_avg_seq,FPS_median_seq,FPS_weighted_by_frames,total_frames,total_time_sec,model_path
+MDNet_PyMDNet,pymdnet_vototb,otb_embed_subset,22,65.21435546875,85.24356842041016,81.44035339355469,6.412861167237111,6.505002019390009,6.467432823206237,10673,1650.2683973312378,E:\Programming\Python\Project\AI\CV\Tracking\TransTResearch\OtherTracker\PyMDNet\models\mdnet_vot-otb.pth

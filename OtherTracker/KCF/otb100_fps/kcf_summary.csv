@@ -1,0 +1,2 @@
+tracker,valid_sequences,fps_avg_seq,fps_median_seq,fps_global,fps_weighted_by_frames,total_frames,total_time_sec
+KCF,100,582.4767780269774,463.44783084142216,582.4767780269774,368.4905016084907,59035,160.20765730000494

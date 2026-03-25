@@ -1,0 +1,16 @@
+tracker,source,status,fps_global
+CSRT,local_opencv_csrt,ok,79.03930586800678
+ECO,local_pytracking_eco,ok,60.25781793993431
+DeepSRDCF,embedded_otb_mat,ok,0.22336051560828213
+SRDCFdecon,embedded_otb_mat,ok,2.299308559836537
+SRDCF,embedded_otb_mat,ok,3.5512002925797237
+Staple,embedded_otb_mat,ok,42.88378790316382
+HDT,embedded_otb_mat,ok,5.502226776005491
+CF2,embedded_otb_mat,ok,10.422932967927053
+LCT,embedded_otb_mat,ok,20.745973476091084
+SAMF,embedded_otb_mat,ok,16.95178008469542
+MEEM,local_matlab_otb,ok,12.8467525079035
+DSST,local_matlab_otb,ok,54.6922299050929
+MDNet,embedded_otb_mat,missing,nan
+CNN-SVM,embedded_otb_mat,missing,nan
+KCF,local_opencv_kcf,ok,402.03550878576175

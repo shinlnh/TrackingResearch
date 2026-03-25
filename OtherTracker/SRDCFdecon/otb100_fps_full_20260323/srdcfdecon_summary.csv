@@ -1,0 +1,2 @@
+tracker,source,status,valid_sequences,fps_avg_seq,fps_median_seq,fps_global,fps_weighted_by_frames,total_frames,total_time_sec
+SRDCFdecon,local_matlab_otb,ok,100,5.21619295560675,4.38109992771399,5.21619295560675,3.97823274725421,59035,14839.5038075

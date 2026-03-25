@@ -1,0 +1,2 @@
+tracker,source,status,valid_sequences,fps_avg_seq,fps_median_seq,fps_global,fps_weighted_by_frames,total_frames,total_time_sec
+CCOT,local_ccot_matlab_gpu,partial,5,0.9336506016589933,0.7901137720724104,0.9336506016589933,0.5737815687857999,1680,2927.943474300001

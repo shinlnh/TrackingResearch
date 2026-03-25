@@ -1,0 +1,2 @@
+tracker,backend,parameter,valid_sequences,fps_avg_seq,fps_median_seq,fps_global,fps_weighted_by_frames,total_frames,total_time_sec
+DeepSRDCF,pytracking,deepsrdcf,100,82.58469807806755,82.75243319872254,82.58469807806755,88.21015626416715,59035,669.2540009021759
