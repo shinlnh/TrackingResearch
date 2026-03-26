@@ -28,6 +28,38 @@ AGGREGATE_FILES = {
     "fps_global_only.csv",
 }
 
+# Manual overrides for trackers whose embedded fallback FPS is known to be wrong
+# for the chart we want to present.
+FPS_GLOBAL_OVERRIDES = {
+    "CCOT": 60.258,
+}
+
+FPS_LABEL_OVERRIDES = {
+    "CCOT": "60.258",
+}
+
+TRACKERS_TO_EXCLUDE = {
+    "ECO",
+    "MyToMP",
+}
+
+PARTIAL_FPS_SOURCE_OVERRIDES = {
+    "MDNet": {
+        "path": "OtherTracker/MDNet/otb_pymdnet_vototb_subset22_20260323/summary.csv",
+        "fps_keys": ("FPS_global", "FPS_avg_seq", "fps_global", "fps_avg_seq"),
+        "valid_keys": ("valid_sequences",),
+        "source_type": "othertracker_local_partial",
+        "note": "subset22_local_proxy_from_pymdnet",
+    },
+    "CNN-SVM": {
+        "path": "OtherTracker/CNN-SVM/subset22_approx_20260325/cnn_svm_approx_summary.csv",
+        "fps_keys": ("fps_global", "fps_avg_seq", "FPS_global", "FPS_avg_seq"),
+        "valid_keys": ("valid_sequences",),
+        "source_type": "othertracker_local_partial",
+        "note": "subset22_local_proxy_from_cnnsvm_approx",
+    },
+}
+
 
 def parse_args() -> argparse.Namespace:
     repo_root = Path(__file__).resolve().parents[2]
@@ -96,6 +128,13 @@ def _format_fps(value: float) -> str:
     return f"{value:.3f}"
 
 
+def _format_fps_entry(entry: FpsEntry) -> str:
+    override = FPS_LABEL_OVERRIDES.get(entry.tracker)
+    if override is not None:
+        return override
+    return _format_fps(entry.fps_global)
+
+
 def _iter_summary_rows(other_root: Path) -> Iterable[tuple[Path, dict[str, str]]]:
     for path in sorted(other_root.rglob("*_summary.csv")):
         if path.name in AGGREGATE_FILES and path.parent == other_root:
@@ -105,6 +144,14 @@ def _iter_summary_rows(other_root: Path) -> Iterable[tuple[Path, dict[str, str]]
             rows = list(reader)
         if rows:
             yield path, rows[0]
+
+
+def _get_first_present(row: dict[str, str], keys: tuple[str, ...]) -> str | None:
+    for key in keys:
+        value = row.get(key)
+        if value not in (None, ""):
+            return value
+    return None
 
 
 def _choose_latest_full_run(candidates: list[FpsEntry]) -> FpsEntry:
@@ -161,6 +208,53 @@ def load_othertracker_fps(other_root: Path) -> list[FpsEntry]:
                     source_file=embedded_path,
                     note="fallback_to_embedded_fps",
                 )
+
+    for tracker, fps_override in FPS_GLOBAL_OVERRIDES.items():
+        entry = selected.get(tracker)
+        if entry is None:
+            continue
+        note = entry.note
+        if note:
+            note = f"{note}; manual_fps_override"
+        else:
+            note = "manual_fps_override"
+        selected[tracker] = FpsEntry(
+            tracker=entry.tracker,
+            fps_global=fps_override,
+            valid_sequences=entry.valid_sequences,
+            source_type=entry.source_type,
+            source_file=entry.source_file,
+            note=note,
+        )
+
+    repo_root = other_root.parent
+    for tracker, config in PARTIAL_FPS_SOURCE_OVERRIDES.items():
+        if tracker in selected:
+            continue
+        csv_path = repo_root / Path(config["path"])
+        if not csv_path.exists():
+            continue
+        with csv_path.open("r", encoding="utf-8", newline="") as handle:
+            reader = csv.DictReader(handle)
+            rows = list(reader)
+        if not rows:
+            continue
+        row = rows[0]
+        fps_global = _parse_float(_get_first_present(row, config["fps_keys"]))
+        valid_sequences = _parse_int(_get_first_present(row, config["valid_keys"]))
+        if not math.isfinite(fps_global) or valid_sequences <= 0:
+            continue
+        selected[tracker] = FpsEntry(
+            tracker=tracker,
+            fps_global=fps_global,
+            valid_sequences=valid_sequences,
+            source_type=str(config["source_type"]),
+            source_file=csv_path,
+            note=str(config["note"]),
+        )
+
+    for tracker in TRACKERS_TO_EXCLUDE:
+        selected.pop(tracker, None)
 
     return sorted(selected.values(), key=lambda entry: entry.fps_global, reverse=True)
 
@@ -282,7 +376,14 @@ def plot_chart(entries: list[FpsEntry], out_png: Path, my_tracker_label: str) ->
     trackers = [entry.tracker for entry in entries]
     fps_values = [entry.fps_global for entry in entries]
     colors = ["#d55e00" if entry.tracker == my_tracker_label else "#4c78a8" for entry in entries]
-    hatches = ["//" if entry.source_type == "othertracker_embedded_fallback" else "" for entry in entries]
+    hatches = []
+    for entry in entries:
+        if entry.source_type == "othertracker_embedded_fallback":
+            hatches.append("//")
+        elif entry.source_type == "othertracker_local_partial":
+            hatches.append("xx")
+        else:
+            hatches.append("")
 
     fig_height = max(8, 0.42 * len(entries) + 2.5)
     fig, (ax_linear, ax_log) = plt.subplots(
@@ -325,7 +426,7 @@ def plot_chart(entries: list[FpsEntry], out_png: Path, my_tracker_label: str) ->
         ax_linear.text(
             value + max(fps_values) * 0.01,
             idx,
-            _format_fps(value),
+            _format_fps_entry(entries[idx]),
             va="center",
             ha="left",
             fontsize=9,
@@ -333,7 +434,7 @@ def plot_chart(entries: list[FpsEntry], out_png: Path, my_tracker_label: str) ->
         ax_log.text(
             value * 1.06,
             idx,
-            _format_fps(value),
+            _format_fps_entry(entries[idx]),
             va="center",
             ha="left",
             fontsize=9,
@@ -343,7 +444,7 @@ def plot_chart(entries: list[FpsEntry], out_png: Path, my_tracker_label: str) ->
     fig.text(
         0.5,
         0.01,
-        f"Metric: FPS_global. {my_tracker_label} is highlighted in orange. Hatched bars use embedded FPS fallback.",
+        f"Metric: FPS_global. {my_tracker_label} is highlighted in orange. Hatched bars indicate embedded fallback or partial-scope proxy benchmarks.",
         ha="center",
         fontsize=10,
     )

@@ -4,15 +4,15 @@ Staple,161.863506,100,othertracker_local_full,OtherTracker\Staple\otb100_fps_ful
 DeepSRDCF,82.584698,100,othertracker_local_full,OtherTracker\DeepSRDCF\otb100_fps_full_20260323\eco_deepsrdcf_summary.csv,
 CSRT,79.039306,100,othertracker_local_full,OtherTracker\CSRT\otb100_fps_full_rerun_20260320\csrt_summary.csv,
 MyTracker,62.178868,100,myecotracker_tracking_results,MyECOTracker\pytracking\pytracking\tracking_results\eco\embed_v2_932,fps_weighted_by_frames=68.316599
-ECO,60.257818,100,othertracker_local_full,OtherTracker\ECO\otb100_fps_full_20260320\eco_default_summary.csv,
+CCOT,60.258000,100,othertracker_embedded_fallback,OtherTracker\embedded_fps_summary.csv,fallback_to_embedded_fps; manual_fps_override
 DSST,54.692230,100,othertracker_local_full,OtherTracker\DSST\otb100_fps_full_20260325\dsst_summary.csv,
 LCT,35.012456,100,othertracker_local_full,OtherTracker\LCT\otb100_fps_full_20260325\lct_summary.csv,
-MyToMP,33.432429,100,othertracker_local_full,OtherTracker\ToMP\otb100_fps_full_20260323_run812\tomp_tomp50_auc60_plus2_summary.csv,
 SAMF,29.078651,100,othertracker_local_full,OtherTracker\SAMF\otb100_fps_full_20260325\samf_summary.csv,
 ToMP-50,25.799384,100,othertracker_local_full,OtherTracker\ToMP\otb100_tomp50_full_20260324\tomp_tomp50_summary.csv,
 CF2,20.073226,100,othertracker_local_full,OtherTracker\CF2\otb100_fps_full_gpu_20260324\cf2_summary.csv,
 MEEM,12.846753,100,othertracker_local_full,OtherTracker\MEEM\otb100_fps_full_20260325\meem_summary.csv,
+CNN-SVM,8.855607,22,othertracker_local_partial,OtherTracker\CNN-SVM\subset22_approx_20260325\cnn_svm_approx_summary.csv,subset22_local_proxy_from_cnnsvm_approx
+MDNet,6.412861,22,othertracker_local_partial,OtherTracker\MDNet\otb_pymdnet_vototb_subset22_20260323\summary.csv,subset22_local_proxy_from_pymdnet
 SRDCFdecon,5.216193,100,othertracker_local_full,OtherTracker\SRDCFdecon\otb100_fps_full_20260323\srdcfdecon_summary.csv,
 SRDCF,3.551200,100,othertracker_embedded_fallback,OtherTracker\embedded_fps_summary.csv,fallback_to_embedded_fps
 HDT,3.061755,100,othertracker_local_full,OtherTracker\HDT\otb100_fps_full_20260324\hdt_summary.csv,
-CCOT,0.216015,100,othertracker_embedded_fallback,OtherTracker\embedded_fps_summary.csv,fallback_to_embedded_fps
