@@ -1,0 +1,2 @@
+tracker,dataset_type,num_sequences,success_auc,success50,precision20
+MDNet,test_set,280,0.396980,0.434582,0.372538

@@ -1,0 +1,5 @@
+MDNet LaSOT test_set summary
+num_sequences: 280
+success_auc: 0.396980
+success50: 0.434582
+precision20: 0.372538

@@ -1,0 +1,3 @@
+tracker,success_auc,success50,precision20,rank_auc
+MDNet,0.396980,0.434582,0.372538,1
+MyTracker,0.360274,0.381150,0.350567,2

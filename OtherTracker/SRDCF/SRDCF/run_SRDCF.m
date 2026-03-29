@@ -53,6 +53,13 @@ params.scale_step = 1.01;
 params.visualization = 1;
 params.debug = 0;
 
+if nargin >= 4 && ~isempty(parameters)
+    override_fields = fieldnames(parameters);
+    for k = 1:numel(override_fields)
+        params.(override_fields{k}) = parameters.(override_fields{k});
+    end
+end
+
 
 params.wsize = [seq.init_rect(1,4), seq.init_rect(1,3)];
 params.init_pos = [seq.init_rect(1,2), seq.init_rect(1,1)] + floor(params.wsize/2);
