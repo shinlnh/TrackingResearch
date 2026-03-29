@@ -35,6 +35,7 @@ tmp_test.mat
 # Local datasets and rerun logs
 /otb100/
 /otb100/*
+/ls/
 /otb/otb100/
 /otb/otb-toolkit/sequences/archives/
 /OtherTracker/CCOT/sequences/
@@ -44,7 +45,13 @@ tmp_test.mat
 /OtherTracker/SRDCFdecon/SRDCFdecon/sequences/
 /OtherTracker/MDNet/dataset/OTB/
 /OtherTracker/MDNet/dataset/VOT/
+/OtherTracker/ECO/_download_eco_results/
+/OtherTracker/MDNet/_download_mdnet_results/
+/OtherTracker/MDNet/_smoke_pymdnet_lasot/
+/OtherTracker/MDNet/_smoke_pymdnet_lasot_quiet/
 /OtherTracker/PyMDNet/datasets/OTB/
+/OtherTracker/pytracking/tracking_results_external_eco/
+/OtherTracker/pytracking/tracking_results_external_mdnet/
 /OtherTracker/CCOT/external_libs/matconvnet/examples/fast_rcnn/datasets/
 /OtherTracker/CF2/external/matconvnet/examples/fast_rcnn/datasets/
 /otb100result/**/rerun_*.log

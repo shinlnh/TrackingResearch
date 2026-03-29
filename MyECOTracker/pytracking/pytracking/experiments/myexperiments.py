@@ -17,3 +17,27 @@ def uav_test():
 
     dataset = get_dataset('uav')
     return trackers, dataset
+
+
+def eco_verified_otb936_otb():
+    trackers = [Tracker('eco', 'verified_otb936', 936, 'MyTrackerECO')]
+    dataset = get_dataset('otb')
+    return trackers, dataset
+
+
+def eco_verified_otb936_lasot():
+    trackers = [Tracker('eco', 'verified_otb936', 936, 'MyTrackerECO')]
+    dataset = get_dataset('lasot')
+    return trackers, dataset
+
+
+def eco_verified_otb936_lasot_first20():
+    trackers = [Tracker('eco', 'verified_otb936', 936, 'MyTrackerECO')]
+    dataset = get_dataset('lasot')
+    return trackers, dataset[:20]
+
+
+def eco_verified_otb936_lasot_headtail40():
+    trackers = [Tracker('eco', 'verified_otb936', 936, 'MyTrackerECO')]
+    dataset = get_dataset('lasot')
+    return trackers, dataset[:20] + dataset[-20:]
