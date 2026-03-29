@@ -57,6 +57,10 @@ tmp_test.mat
 /otb100result/**/rerun_*.log
 /MyECOTracker/otb100result/**/rerun_*.log
 /OtherTracker/**/rerun_*.log
+/MyECOTracker/otb100result/*.status.txt
+/MyECOTracker/otb100result/*toolkit_summary.csv
+/MyECOTracker/otb100result/*toolkit_summary.txt
+/MyECOTracker/otb100result/*_summary.csv
 
 # Large local pretrained weights kept out of GitHub
 /MyECOTracker/pytracking/pretrained_network/tomp50.pth.tar
