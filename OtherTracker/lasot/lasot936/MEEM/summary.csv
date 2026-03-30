@@ -1,0 +1,2 @@
+tracker,scope,valid_sequences,AUC,Precision,Success50,FPS_avg_seq,FPS_median_seq,FPS_weighted_by_frames,total_frames,total_time_sec
+MEEM,headtail40,40,3.9023144245147705,0.626743495464325,1.3829327821731567,12.859435216190445,12.16128737046865,11.610666540980763,99468,8566.950023835398
