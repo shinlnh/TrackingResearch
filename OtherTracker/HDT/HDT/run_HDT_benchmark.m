@@ -49,6 +49,13 @@ if numel(parts) == 2
     anno_file = fullfile(seq.path, ['groundtruth_rect.' parts{2} '.txt']);
 end
 
+if ~exist(anno_file, 'file')
+    fallback_file = fullfile(seq.path, 'groundtruth.txt');
+    if exist(fallback_file, 'file')
+        anno_file = fallback_file;
+    end
+end
+
 rect_anno = readmatrix(anno_file, 'FileType', 'text');
 if isempty(rect_anno) || size(rect_anno, 2) < 4 || any(isnan(rect_anno(:, 1:min(end, 4))), 'all')
     raw_text = fileread(anno_file);

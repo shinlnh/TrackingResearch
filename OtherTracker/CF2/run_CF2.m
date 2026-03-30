@@ -26,8 +26,14 @@ function results = run_CF2(seq, res_path, bSaveImage)
 % ================================================================================
 global enableGPU;
 global cf2_sequence_name;
+global net;
+persistent cf2_gpu_unavailable;
 
-enableGPU = strcmp(getenv('CF2_USE_GPU'), '1');
+if isempty(cf2_gpu_unavailable)
+    cf2_gpu_unavailable = false;
+end
+
+enableGPU = strcmp(getenv('CF2_USE_GPU'), '1') && ~cf2_gpu_unavailable;
 cf2_sequence_name = seq.name;
 
 % Image file names
@@ -53,9 +59,26 @@ show_visualization=false;
 % ================================================================================
 % Main entry function for visual tracking
 % ================================================================================
-[rects, time] = tracker_ensemble(video_path, img_files, pos, target_sz, ...
-    padding, lambda, output_sigma_factor, interp_factor, ...
-    cell_size, show_visualization);
+try
+    [rects, time] = tracker_ensemble(video_path, img_files, pos, target_sz, ...
+        padding, lambda, output_sigma_factor, interp_factor, ...
+        cell_size, show_visualization);
+catch err
+    if enableGPU && is_gpu_runtime_error(err)
+        warning('CF2:gpuFallbackRuntime', ...
+            'GPU path failed for %s. Retrying on CPU. Root cause: %s', ...
+            seq.name, err.message);
+        cf2_gpu_unavailable = true;
+        enableGPU = false;
+        setenv('CF2_USE_GPU', '0');
+        net = [];
+        [rects, time] = tracker_ensemble(video_path, img_files, pos, target_sz, ...
+            padding, lambda, output_sigma_factor, interp_factor, ...
+            cell_size, show_visualization);
+    else
+        rethrow(err);
+    end
+end
 
 % ================================================================================
 % Return results to benchmark, in a workspace variable
@@ -66,5 +89,23 @@ results.fps    = numel(img_files)/time;
 
 cf2_sequence_name = '';
 
+end
+
+function tf = is_gpu_runtime_error(err)
+report = lower(getReport(err, 'extended', 'hyperlinks', 'off'));
+patterns = {
+    'compute capability'
+    'cuda'
+    'gpu device'
+    'parallel.gpu.enablecudaforwardcompatibility'
+    'vl_nnconv'
+};
+tf = false;
+for i = 1:numel(patterns)
+    if contains(report, patterns{i})
+        tf = true;
+        return;
+    end
+end
 end
 
