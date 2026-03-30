@@ -1,0 +1,2 @@
+tracker,parameter,scope,valid_sequences,AUC,Precision,Success50,FPS_avg_seq,FPS_median_seq,FPS_weighted_by_frames,total_frames,total_time_sec,device
+CNN-SVM,approx_alexnet_fc6_saliency,headtail40,40,28.656883239746094,28.588985443115234,25.885868072509766,12.905843297101587,13.614017416346652,12.880076450095448,99468,7722.624969299999,cuda
