@@ -1,0 +1,2 @@
+tracker,scope,valid_sequences,fps_avg_seq,fps_median_seq,fps_weighted_by_frames,total_frames,total_time_sec
+SAMF,headtail40,40,20.1449968803766,15.1976139741425,8.84249478029981,99468,11248.861602
