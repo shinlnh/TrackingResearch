@@ -1,0 +1,2 @@
+tracker,scope,valid_sequences,AUC,Precision,Success50,FPS_avg_seq,FPS_median_seq,FPS_weighted_by_frames,total_frames,total_time_sec
+DSST,headtail40,40,17.657188415527344,17.512353897094727,16.203388214111328,90.74954286800764,29.91057995273979,4.893720967112592,99468,20325.6378261976
