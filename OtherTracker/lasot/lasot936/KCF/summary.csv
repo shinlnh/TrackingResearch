@@ -1,0 +1,2 @@
+tracker,backend,parameter,scope,valid_sequences,AUC,Precision,Success50,FPS_avg_seq,FPS_median_seq,FPS_weighted_by_frames,total_frames,total_time_sec
+KCF,opencv,kcf,headtail40,40,12.289633750915527,9.386809349060059,9.592551231384277,1119.6922225895817,613.9414281986817,98.67959155796547,99468,1007.9895795025805

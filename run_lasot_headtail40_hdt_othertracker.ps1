@@ -1,3 +1,7 @@
+param(
+    [switch]$Reset
+)
+
 $ErrorActionPreference = "Stop"
 
 $repoRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -12,16 +16,17 @@ $summaryPath = Join-Path $outputDir "summary.csv"
 New-Item -ItemType Directory -Force $outputDir | Out-Null
 New-Item -ItemType Directory -Force $resultsDir | Out-Null
 
-$cleanupTargets = @(
-    (Join-Path $outputDir "tracking.log"),
-    (Join-Path $outputDir "summary.csv"),
-    (Join-Path $outputDir "hdt_matlab_summary.csv")
-)
-foreach ($target in $cleanupTargets) {
-    if (Test-Path $target) {
-        Remove-Item -LiteralPath $target -Recurse -Force -ErrorAction SilentlyContinue
+if ($Reset) {
+    $cleanupTargets = @(
+        (Join-Path $outputDir "tracking.log"),
+        (Join-Path $outputDir "summary.csv"),
+        (Join-Path $outputDir "hdt_matlab_summary.csv")
+    )
+    foreach ($target in $cleanupTargets) {
+        if (Test-Path $target) {
+            Remove-Item -LiteralPath $target -Recurse -Force -ErrorAction SilentlyContinue
+        }
     }
-}
 
 @'
 import pathlib
@@ -39,9 +44,19 @@ for name in [line.strip() for line in seq_file.read_text(encoding="utf-8").split
 
 print(f"Removed {removed} old result files from {results_dir}")
 '@ | & $pythonExe -
+} else {
+    $resumeBanner = @(
+        ""
+        "===== RESUME HDT LaSOT headtail40 ====="
+        "Existing result files are kept. Completed sequences will be skipped."
+        "Use -Reset if you want to delete old results and run from scratch."
+        ""
+    )
+    $resumeBanner | Tee-Object -FilePath $logPath -Append | Out-Null
+}
 
 cmd /c "set PYTHONUNBUFFERED=1 && set HDT_USE_GPU=1 && matlab -batch ""addpath(fullfile(pwd,'OtherTracker','HDT')); run_hdt_lasot_headtail40;"" 2>&1" |
-    Tee-Object -FilePath $logPath
+    Tee-Object -FilePath $logPath -Append
 
 $runExitCode = $LASTEXITCODE
 
