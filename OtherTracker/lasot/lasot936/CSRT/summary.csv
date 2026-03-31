@@ -1,0 +1,2 @@
+tracker,backend,parameter,scope,valid_sequences,AUC,Precision,Success50,FPS_avg_seq,FPS_median_seq,FPS_weighted_by_frames,total_frames,total_time_sec
+CSRT,opencv,csrt,headtail40,40,13.861600875854492,16.663570404052734,10.031129837036133,112.17789840846557,93.45738453136845,65.69887892155946,99468,1513.9984370016246
