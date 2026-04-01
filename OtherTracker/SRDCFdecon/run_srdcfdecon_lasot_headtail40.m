@@ -94,7 +94,9 @@ summary.total_frames = sum(frame_counts);
 summary.total_time_sec = sum(time_totals);
 summary.fps_weighted_by_frames = summary.total_frames / summary.total_time_sec;
 
-write_summary_csv(fullfile(out_dir, 'srdcfdecon_matlab_summary.csv'), summary);
+if ~strcmp(getenv('SRDCFDECON_SKIP_MATLAB_SUMMARY'), '1')
+    write_summary_csv(fullfile(out_dir, 'srdcfdecon_matlab_summary.csv'), summary);
+end
 end
 
 function seq = build_lasot_sequence(lasot_root, seq_name)

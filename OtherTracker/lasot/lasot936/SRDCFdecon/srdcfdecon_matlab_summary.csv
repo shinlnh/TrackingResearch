@@ -1,0 +1,2 @@
+tracker,scope,valid_sequences,fps_avg_seq,fps_median_seq,fps_weighted_by_frames,total_frames,total_time_sec
+SRDCFdecon,headtail40,1,3.14961784145428,3.14961784145428,3.14961784145428,1974,626.742703199999
