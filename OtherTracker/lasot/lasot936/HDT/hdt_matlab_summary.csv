@@ -1,0 +1,2 @@
+tracker,scope,valid_sequences,fps_avg_seq,fps_median_seq,fps_weighted_by_frames,total_frames,total_time_sec
+HDT,headtail40,40,2.02562497480642,2.04044448830726,0.977990406691906,99468,101706.519122672
