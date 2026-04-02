@@ -1,0 +1,18 @@
+tracker,fps_avg,source_type,note
+KCF,402.035509,othertracker_local_full,
+Staple,161.863506,othertracker_local_full,
+DeepSRDCF,82.584698,othertracker_local_full,
+CSRT,79.039306,othertracker_local_full,
+MyTracker,62.178868,myecotracker_tracking_results,fps_weighted_by_frames=68.316599
+CCOT,60.258000,othertracker_embedded_fallback,fallback_to_embedded_fps; manual_fps_override
+DSST,54.692230,othertracker_local_full,
+LCT,35.012456,othertracker_local_full,
+SAMF,29.078651,othertracker_local_full,
+ToMP-50,25.799384,othertracker_local_full,
+CF2,20.073226,othertracker_local_full,
+MEEM,12.846753,othertracker_local_full,
+CNN-SVM,8.855607,othertracker_local_partial,subset22_local_proxy_from_cnnsvm_approx
+MDNet,6.412861,othertracker_local_partial,subset22_local_proxy_from_pymdnet
+SRDCFdecon,5.216193,othertracker_local_full,
+SRDCF,3.551200,othertracker_embedded_fallback,fallback_to_embedded_fps
+HDT,3.061755,othertracker_local_full,

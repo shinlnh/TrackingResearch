@@ -1,0 +1,22 @@
+{
+  "otb": {
+    "only_mytracker": {
+      "success_plot": "overall_result/video/otb/only_mytracker/success_plot",
+      "fps_avg": "overall_result/video/otb/only_mytracker/fps_avg"
+    },
+    "full_tracker": {
+      "success_plot": "overall_result/video/otb/full_tracker/success_plot",
+      "fps_avg": "overall_result/video/otb/full_tracker/fps_avg"
+    }
+  },
+  "lasot": {
+    "only_mytracker": {
+      "success_plot": "overall_result/video/lasot/only_mytracker/success_plot",
+      "fps_avg": "overall_result/video/lasot/only_mytracker/fps_avg"
+    },
+    "full_tracker": {
+      "success_plot": "overall_result/video/lasot/full_tracker/success_plot",
+      "fps_avg": "overall_result/video/lasot/full_tracker/fps_avg"
+    }
+  }
+}

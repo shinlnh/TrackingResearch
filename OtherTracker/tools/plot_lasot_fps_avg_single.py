@@ -101,7 +101,7 @@ def plot_entries(entries: list[FpsEntry], out_png: Path, my_tracker_label: str =
     ax.set_yticklabels(trackers)
     ax.invert_yaxis()
     ax.set_xlabel("FPS_avg_seq")
-    ax.set_title("LaSOT headtail40 FPS Avg Comparison: MyTracker vs OtherTracker")
+    ax.set_title("LaSOT FPS Avg Comparison: MyTracker vs OtherTracker")
     ax.grid(axis="x", linestyle="--", alpha=0.35)
     ax.set_axisbelow(True)
     ax.set_xlim(0, max(fps_values) * 1.18)
@@ -123,7 +123,7 @@ def plot_entries(entries: list[FpsEntry], out_png: Path, my_tracker_label: str =
 
 def main() -> int:
     repo_root = Path(__file__).resolve().parents[2]
-    out_png = repo_root / "overall_result" / "lasot" / "fps_avg" / "fps_avg_lasot_headtail40_mytracker_vs_othertracker.png"
+    out_png = repo_root / "overall_result" / "picture" / "lasot" / "fps_avg" / "fps_avg_lasot_mytracker_vs_othertracker.png"
     entries = load_entries(repo_root)
     plot_entries(entries, out_png)
     print(f"Wrote chart: {out_png}")
