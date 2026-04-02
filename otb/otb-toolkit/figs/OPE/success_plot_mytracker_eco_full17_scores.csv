@@ -1,7 +1,7 @@
 tracker,success_rate,rank
 MDNet,0.677586,1
 CCOT,0.671176,2
-MyTracker,0.663000,3
+MyTracker,0.669370,3
 DeepSRDCF,0.635311,4
 SRDCFdecon,0.626609,5
 ToMP-50,0.602084,6

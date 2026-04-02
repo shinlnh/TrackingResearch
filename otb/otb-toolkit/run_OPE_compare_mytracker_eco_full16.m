@@ -8,7 +8,7 @@ baseline_names = { ...
 
 % Use MyTracker and the ToMP-50 alias in the paper-style comparison.
 custom_names = {'MyTracker', 'ToMP-50'};
-success_auc_overrides = struct('MyTracker', 0.663);
+success_auc_overrides = struct(); % Use raw success curves from result files.
 
 selected_names = [baseline_names, custom_names];
 
