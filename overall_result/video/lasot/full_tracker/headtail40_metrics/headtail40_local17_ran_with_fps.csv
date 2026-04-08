@@ -1,0 +1,11 @@
+tracker,success_auc,success50,precision20,rank_auc,fps_final_weighted_by_frames,fps_avg_seq_local,fps_median_seq_local,fps_valid_sequences_local,fps_source_relpath
+MDNet,0.362707,0.391644,0.396564,1,6.523792,6.587699,6.611249,40,OtherTracker\lasot\lasot936\MDNet\summary.csv
+MyTracker,0.301930,0.302473,0.309430,3,75.028668,74.792824,73.767356,40,MyECOTracker\lasot\result\lasot936\tracking.log
+ECO,0.288009,0.283577,0.299642,5,61.310790,62.981653,62.547598,40,OtherTracker\lasot\lasot936\ECO\summary.csv
+Staple,0.238667,0.208064,0.273916,12,20.796128,74.714977,76.894048,40,OtherTracker\lasot\lasot936\Staple\summary.csv
+SRDCF,0.217151,0.224087,0.209036,17,7.873938,13.013567,9.874804,40,OtherTracker\lasot\lasot936\SRDCF\summary.csv
+MEEM,0.205973,0.167294,0.226623,18,11.610667,12.859435,12.161287,40,OtherTracker\lasot\lasot936\MEEM\summary.csv
+LCT,0.196371,0.187462,0.184238,20,7.043583,21.238700,16.543884,40,OtherTracker\lasot\lasot936\LCT\summary.csv
+SAMF,0.181161,0.160751,0.198388,22,8.842495,20.144997,15.197614,40,OtherTracker\lasot\lasot936\SAMF\summary.csv
+DSST,0.173530,0.157956,0.167483,24,4.893721,90.749543,29.910580,40,OtherTracker\lasot\lasot936\DSST\summary.csv
+KCF,0.163789,0.144574,0.181534,27,98.679592,1119.692223,613.941428,40,OtherTracker\lasot\lasot936\KCF\summary.csv

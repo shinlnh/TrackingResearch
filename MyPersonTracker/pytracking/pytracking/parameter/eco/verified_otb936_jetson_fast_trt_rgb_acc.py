@@ -1,0 +1,1 @@
+from pytracking.parameter.eco.jetson_fast_trt_rgb_acc import parameters

@@ -1,0 +1,41 @@
+LaSOT test_set comparison across all locally available tracking_result folders
+num_sequences: 280
+num_trackers_compared: 36
+
+Compared trackers (sorted by AUC):
+1. MDNet | success_auc=0.396980 | success50=0.434582 | precision20=0.372538
+2. VITAL | success_auc=0.389835 | success50=0.424793 | precision20=0.359539
+3. MyTracker | success_auc=0.360274 | success50=0.381150 | precision20=0.350567
+4. SiamFC | success_auc=0.335721 | success50=0.382427 | precision20=0.339270
+5. StructSiam | success_auc=0.334716 | success50=0.366133 | precision20=0.332958
+6. DSiam | success_auc=0.332540 | success50=0.361787 | precision20=0.322022
+7. ECO | success_auc=0.324078 | success50=0.329089 | precision20=0.300670
+8. SINT | success_auc=0.314310 | success50=0.321264 | precision20=0.294625
+9. STRCF | success_auc=0.308372 | success50=0.325297 | precision20=0.297748
+10. ECO_HC | success_auc=0.304088 | success50=0.299323 | precision20=0.279233
+11. CFNet | success_auc=0.274621 | success50=0.258399 | precision20=0.258833
+12. BACF | success_auc=0.259336 | success50=0.263007 | precision20=0.239118
+13. TRACA | success_auc=0.257460 | success50=0.255250 | precision20=0.226928
+14. MEEM | success_auc=0.257061 | success50=0.224023 | precision20=0.226871
+15. HCFT | success_auc=0.250348 | success50=0.215435 | precision20=0.240664
+16. PTAV | success_auc=0.250280 | success50=0.253959 | precision20=0.253905
+17. SRDCF | success_auc=0.244619 | success50=0.244627 | precision20=0.218961
+18. CSRDCF | success_auc=0.244410 | success50=0.224223 | precision20=0.219700
+19. Staple | success_auc=0.243365 | success50=0.239887 | precision20=0.239267
+20. Staple_CA | success_auc=0.238209 | success50=0.237864 | precision20=0.235017
+21. SAMF | success_auc=0.233416 | success50=0.213136 | precision20=0.202616
+22. LCT | success_auc=0.221486 | success50=0.204108 | precision20=0.189618
+23. Struck | success_auc=0.212406 | success50=0.173772 | precision20=0.180801
+24. TLD | success_auc=0.209781 | success50=0.177755 | precision20=0.174324
+25. DSST | success_auc=0.207162 | success50=0.197970 | precision20=0.189179
+26. fDSST | success_auc=0.203190 | success50=0.195580 | precision20=0.183832
+27. ASLA | success_auc=0.193846 | success50=0.173680 | precision20=0.168181
+28. SCT4 | success_auc=0.190732 | success50=0.167158 | precision20=0.179161
+29. KCF | success_auc=0.178002 | success50=0.155537 | precision20=0.165509
+30. CN | success_auc=0.170416 | success50=0.141756 | precision20=0.162940
+31. CT | success_auc=0.158025 | success50=0.117290 | precision20=0.100655
+32. L1APG | success_auc=0.154906 | success50=0.152205 | precision20=0.154763
+33. CSK | success_auc=0.148645 | success50=0.125436 | precision20=0.131215
+34. MIL | success_auc=0.139049 | success50=0.092565 | precision20=0.077070
+35. STC | success_auc=0.138127 | success50=0.092646 | precision20=0.136769
+36. IVT | success_auc=0.117568 | success50=0.115580 | precision20=0.122189

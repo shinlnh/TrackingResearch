@@ -1,0 +1,2 @@
+tracker,dataset,valid_sequences,missing_sequences,AUC_mean,Precision_mean,Norm_Precision_mean,Success50_mean,Success75_mean,FPS_avg_seq,FPS_median_seq,FPS_weighted_by_frames,total_frames,total_time_sec
+eco_verified_person_balance_v1_1107,OTB100-person-subset,55/55,,59.31639821440543,82.27002318948507,76.37500943954694,73.71977345001969,35.7704288313504,68.0981968946257,67.54025483613552,70.48020136067214,26727,379.212878

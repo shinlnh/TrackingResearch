@@ -1,0 +1,2 @@
+tracker,parameter,scope,valid_sequences,AUC,Precision,Success50,FPS_avg_seq,FPS_median_seq,FPS_weighted_by_frames,total_frames,total_time_sec,model_path
+MDNet,pymdnet_vototb,airplane-1,1,56.81492233276367,44.548065185546875,73.88809204101562,6.75884,6.75884,6.75884,2788,412.4968189807718,E:\Programming\Python\Project\AI\CV\Tracking\TransTResearch\OtherTracker\PyMDNet\models\mdnet_vot-otb.pth

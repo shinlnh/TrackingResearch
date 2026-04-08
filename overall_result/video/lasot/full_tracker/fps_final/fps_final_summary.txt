@@ -1,0 +1,21 @@
+LaSOT headtail40 final FPS report
+Metric: FPS_final_weighted_by_frames = total_frames / total_time_sec
+Integrated trackers with runnable headtail40 outputs: 17
+
+01. KCF: FPS_final=98.679592, FPS_avg_seq=1119.692223, AUC=12.289634
+02. DeepSRDCF: FPS_final=81.238324, FPS_avg_seq=83.118480, AUC=23.375340
+03. MyTracker: FPS_final=75.028668, FPS_avg_seq=74.792824, AUC=30.207394
+04. CSRT: FPS_final=65.698879, FPS_avg_seq=112.177898, AUC=13.861601
+05. ECO: FPS_final=61.310790, FPS_avg_seq=62.981653, AUC=30.590370
+06. ToMP: FPS_final=22.870803, FPS_avg_seq=23.062063, AUC=61.591629
+07. Staple: FPS_final=20.796128, FPS_avg_seq=74.714977, AUC=22.434401
+08. CNN-SVM: FPS_final=12.880076, FPS_avg_seq=12.905843, AUC=28.656883
+09. MEEM: FPS_final=11.610667, FPS_avg_seq=12.859435, AUC=3.902314
+10. SAMF: FPS_final=8.842495, FPS_avg_seq=20.144997, AUC=18.061867
+11. SRDCF: FPS_final=7.873938, FPS_avg_seq=13.013567, AUC=21.583771
+12. LCT: FPS_final=7.043583, FPS_avg_seq=21.238700, AUC=16.254961
+13. MDNet: FPS_final=6.523792, FPS_avg_seq=6.587699, AUC=32.851112
+14. DSST: FPS_final=4.893721, FPS_avg_seq=90.749543, AUC=17.657188
+15. CF2: FPS_final=2.722565, FPS_avg_seq=16.168986, AUC=26.798843
+16. SRDCFdecon: FPS_final=1.976791, FPS_avg_seq=2.718301, AUC=22.517923
+17. HDT: FPS_final=0.977990, FPS_avg_seq=2.025625, AUC=21.405817

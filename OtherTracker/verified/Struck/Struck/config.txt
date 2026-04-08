@@ -1,0 +1,6 @@
+sequenceBasePath = E:\Programming\Python\Project\AI\CV\Tracking\TransTResearch\ls\lasot\airplane
+sequenceName = airplane-1
+frameWidth = 640
+frameHeight = 360
+startFrame = 1
+endFrame = 2788

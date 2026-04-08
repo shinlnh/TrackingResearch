@@ -1,0 +1,2 @@
+tracker,dataset,valid_sequences,AUC_mean,Precision_mean,FPS_avg_seq,FPS_median_seq,FPS_weighted_by_frames,total_frames,total_time_sec
+MyPersonTracker-ECO-ProjRT-FB54,OTB-person,55,64.32733906097347,88.01388521086085,81.61068551026091,89.91589527689489,80.75247175696123,26727,330.97438900000003

@@ -1,0 +1,52 @@
+verified_dir,tracker_label,status,note
+ASLA,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+ASRCF-master,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+BACF,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+cfnet-master,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+CN,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+CSK,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+CSRDCF,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+CT,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+DSiam,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+DSST,DSST,integrated_headtail40_runner_present,Mapped to tracker label DSST
+ECO-master,ECO,integrated_headtail40_runner_present,Mapped to tracker label ECO
+ECO_HC,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+fDSST,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+GFS-DCF-master,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+GlobalTrack-master,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+HCFTstar-master,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+IVT,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+KCF,KCF,integrated_headtail40_runner_present,Mapped to tracker label KCF
+L1APG,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+LCT,LCT,integrated_headtail40_runner_present,Mapped to tracker label LCT
+LTMU-master,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+MDNet-master,MDNet,integrated_headtail40_runner_present,Mapped to tracker label MDNet
+MEEM,MEEM,integrated_headtail40_runner_present,Mapped to tracker label MEEM
+MIL,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+PTAV,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+pysot-master,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+pytracking-master,ToMP,integrated_headtail40_runner_present,Mapped to tracker label ToMP
+SAMF,SAMF,integrated_headtail40_runner_present,Mapped to tracker label SAMF
+SCT4,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+SiamDW-master,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+SiamFC,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+SINT-master,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+SPLT-py36,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+SRDCF,SRDCF,integrated_headtail40_runner_present,Mapped to tracker label SRDCF
+Staple,Staple,integrated_headtail40_runner_present,Mapped to tracker label Staple
+Staple_CA,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+STC,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+STRCF,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+STRCF-master,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+Struck,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+StructSiam,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+TLD,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+TRACA-master,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+Vital_release-master,,source_present_but_no_headtail40_runner,Needs LaSOT dataset adapter / runner integration before batch execution
+,CF2,headtail40_runner_present_outside_verified,"Integrated in repo, but source tree is not under OtherTracker/verified"
+,CNN-SVM,headtail40_runner_present_outside_verified,"Integrated in repo, but source tree is not under OtherTracker/verified"
+,CSRT,headtail40_runner_present_outside_verified,"Integrated in repo, but source tree is not under OtherTracker/verified"
+,DeepSRDCF,headtail40_runner_present_outside_verified,"Integrated in repo, but source tree is not under OtherTracker/verified"
+,HDT,headtail40_runner_present_outside_verified,"Integrated in repo, but source tree is not under OtherTracker/verified"
+,MyTracker,headtail40_runner_present_outside_verified,"Integrated in repo, but source tree is not under OtherTracker/verified"
+,SRDCFdecon,headtail40_runner_present_outside_verified,"Integrated in repo, but source tree is not under OtherTracker/verified"

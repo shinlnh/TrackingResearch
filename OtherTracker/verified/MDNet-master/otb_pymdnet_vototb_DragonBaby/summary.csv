@@ -1,0 +1,2 @@
+tracker,parameter,scope,valid_sequences,AUC,Precision,Success50,FPS_avg_seq,FPS_median_seq,FPS_weighted_by_frames,total_frames,total_time_sec,model_path
+MDNet_PyMDNet,pymdnet_vototb,DragonBaby,1,68.31014251708984,92.92034912109375,91.15044403076172,5.735485217724669,5.735485217724669,5.735485217724669,113,19.701907634735107,E:\Programming\Python\Project\AI\CV\Tracking\TransTResearch\OtherTracker\PyMDNet\models\mdnet_vot-otb.pth

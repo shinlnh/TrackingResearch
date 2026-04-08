@@ -2,6 +2,8 @@
 venv/
 venv312/
 .venv/
+MyPersonTracker/.venv_face_training/
+MyPersonTracker/.venv_person_pipeline/
 __pycache__/
 *.pyc
 *.pyo
@@ -67,3 +69,8 @@ tmp_test.mat
 /OtherTracker/pytracking/pytracking/networks/tomp50.pth.tar
 /OtherTracker/CCOT/feature_extraction/networks/imagenet-vgg-m-2048.mat
 /OtherTracker/HDT/HDT/imagenet-vgg-verydeep-19.mat
+/MyPersonTracker/datasets/
+/MyPersonTracker/weights/
+/MyPersonTracker/runs/
+/OtherTracker/verified/PTAV/serial_ptav_v1/siamese_networks/similarity.caffemodel
+/OtherTracker/verified/StructSiam/ckpt/

@@ -1,0 +1,1 @@
+from pytracking.parameter.eco.jetson_fast_trt_vgg_scale3 import parameters

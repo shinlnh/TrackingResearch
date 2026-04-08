@@ -1,0 +1,10 @@
+[full-otb] report_dir=/home/helios/HELIOS/MyECOTracker/jetson/reports/verified_otb936_dual_acc_otb100_full
+[full-otb] results_dir=/home/helios/HELIOS/MyECOTracker/pytracking/pytracking/tracking_results/eco/verified_otb936_jetson_fast_trt_dual_acc_981
+[full-otb] tracker_name=eco
+[full-otb] parameter_name=verified_otb936_jetson_fast_trt_dual_acc
+[full-otb] run_id=981
+[full-otb] dataset_name=otb
+[full-otb] started_at=2026-04-04 15:27:49
+[full-otb] finished_at=2026-04-04 16:18:40
+[full-otb] rows_csv=/home/helios/HELIOS/MyECOTracker/jetson/reports/verified_otb936_dual_acc_otb100_full/per_sequence_metrics.csv
+[full-otb] summary_csv=/home/helios/HELIOS/MyECOTracker/jetson/reports/verified_otb936_dual_acc_otb100_full/summary.csv
