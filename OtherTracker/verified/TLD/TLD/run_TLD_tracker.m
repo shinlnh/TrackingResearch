@@ -35,6 +35,7 @@ end
 para.s_frames = seq.s_frames;   
 para.init_rect = seq.init_rect;
 para.bSaveImage = bSaveImage;
+para.seq_name = seq.name;
 % Run TLD -----------------------------------------------------------------
 %profile on;
 [bb,conf,fps] = tldExample(para);

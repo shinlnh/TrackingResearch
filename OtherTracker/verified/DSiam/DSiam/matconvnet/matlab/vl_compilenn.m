@@ -366,7 +366,8 @@ if opts.enableGpu
     case {'maci64', 'glnxa64'}
       flags.link{end+1} = '-lmwgpu' ;
     case 'win64'
-      flags.link{end+1} = '-lgpu' ;
+      flags.link{end+1} = ['-L"' fullfile(matlabroot, 'extern', 'lib', 'win64', 'microsoft') '"'] ;
+      flags.linklibs{end+1} = 'gpumexbinder.lib' ;
   end
   if opts.enableCudnn
     flags.link{end+1} = ['-L"' opts.cudnnLibDir '"'] ;
@@ -423,7 +424,7 @@ end
 % --------------------------------------------------------------------
 
 flags.mexcc = horzcat(flags.cc, ...
-                      {'-largeArrayDims'}, ...
+                      {'-R2018a'}, ...
                       {['CXXFLAGS=$CXXFLAGS ' strjoin(flags.ccpass)]}, ...
                       {['CXXOPTIMFLAGS=$CXXOPTIMFLAGS ' strjoin(flags.ccoptim)]}) ;
 if ~ispc, flags.mexcc{end+1} = '-cxx'; end
@@ -431,13 +432,13 @@ if ~ispc, flags.mexcc{end+1} = '-cxx'; end
 % mex: compile GPU
 flags.mexcu= horzcat({'-f' mex_cuda_config(root)}, ...
                      flags.cc, ...
-                     {'-largeArrayDims'}, ...
+                     {'-R2018a'}, ...
                      {['CXXFLAGS=$CXXFLAGS ' quote_nvcc(flags.ccpass) ' ' strjoin(flags.nvccpass)]}, ...
                      {['CXXOPTIMFLAGS=$CXXOPTIMFLAGS ' quote_nvcc(flags.ccoptim)]}) ;
 
 % mex: link
 flags.mexlink = horzcat(flags.cc, flags.link, ...
-                        {'-largeArrayDims'}, ...
+                        {'-R2018a'}, ...
                         {['LDFLAGS=$LDFLAGS ', strjoin(flags.linkpass)]}, ...
                         {['LINKLIBS=', strjoin(flags.linklibs), ' $LINKLIBS']}) ;
 
@@ -446,6 +447,7 @@ flags.nvcc = horzcat(flags.cc, ...
                      {opts.cudaArch}, ...
                      {sprintf('-I"%s"', fullfile(matlabroot, 'extern', 'include'))}, ...
                      {sprintf('-I"%s"', fullfile(matlabroot, 'toolbox','distcomp','gpu','extern','include'))}, ...
+                     {sprintf('-I"%s"', fullfile(matlabroot, 'toolbox','parallel','gpu','extern','include'))}, ...
                      {quote_nvcc(flags.ccpass)}, ...
                      {quote_nvcc(flags.ccoptim)}, ...
                      flags.nvccpass) ;
@@ -580,28 +582,46 @@ function cl_path = check_clpath()
 % --------------------------------------------------------------------
 % Checks whether the cl.exe is in the path (needed for the nvcc). If
 % not, tries to guess the location out of mex configuration.
-cc = mex.getCompilerConfigurations('c++');
+cc = mex.getCompilerConfigurations('c++', 'Selected');
 if isempty(cc)
   error(['Mex is not configured.'...
     'Run "mex -setup" to configure your compiler. See ',...
     'http://www.mathworks.com/support/compilers ', ...
     'for supported compilers for your platform.']);
 end
-cl_path = fullfile(cc.Location, 'VC', 'bin', 'amd64');
-[status, ~] = system('cl.exe -help');
-if status == 1
-  warning('CL.EXE not found in PATH. Trying to guess out of mex setup.');
-  prev_path = getenv('PATH');
-  setenv('PATH', [prev_path ';' cl_path]);
-  status = system('cl.exe');
-  if status == 1
-    setenv('PATH', prev_path);
-    error('Unable to find cl.exe');
-  else
-    fprintf('Location of cl.exe (%s) successfully added to your PATH.\n', ...
-      cl_path);
+cl_path = '';
+
+modern_root = fullfile(cc.Location, 'VC', 'Tools', 'MSVC');
+if exist(modern_root, 'dir')
+  versions = dir(modern_root);
+  versions = versions([versions.isdir]);
+  versions = versions(~ismember({versions.name}, {'.', '..'}));
+  version_names = sort({versions.name});
+  for i = numel(version_names):-1:1
+    candidate = fullfile(modern_root, version_names{i}, 'bin', 'HostX64', 'x64', 'cl.exe');
+    if exist(candidate, 'file') == 2
+      cl_path = candidate;
+      return;
+    end
   end
 end
+
+legacy_candidate = fullfile(cc.Location, 'VC', 'bin', 'amd64', 'cl.exe');
+if exist(legacy_candidate, 'file') == 2
+  cl_path = legacy_candidate;
+  return;
+end
+
+[status, output] = system('where cl.exe');
+if status == 0
+  paths = regexp(strtrim(output), '\r?\n', 'split');
+  if ~isempty(paths) && exist(paths{1}, 'file') == 2
+    cl_path = paths{1};
+    return;
+  end
+end
+
+error('Unable to find cl.exe');
 
 % -------------------------------------------------------------------------
 function paths = which_nvcc()
@@ -740,4 +760,3 @@ catch
                       'falling back to default\n'], mfilename);
   cudaArch = opts.defCudaArch;
 end
-

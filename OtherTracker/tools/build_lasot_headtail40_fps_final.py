@@ -26,6 +26,7 @@ TRACKER_SOURCES = (
     TrackerSource("LCT", "summary_csv", "OtherTracker/lasot/lasot936/LCT/summary.csv"),
     TrackerSource("SAMF", "summary_csv", "OtherTracker/lasot/lasot936/SAMF/summary.csv"),
     TrackerSource("MEEM", "summary_csv", "OtherTracker/lasot/lasot936/MEEM/summary.csv"),
+    TrackerSource("PTAV", "summary_csv", "OtherTracker/lasot/lasot936/PTAV/summary.csv"),
     TrackerSource("SRDCF", "summary_csv", "OtherTracker/lasot/lasot936/SRDCF/summary.csv"),
     TrackerSource("CNN-SVM", "summary_csv", "OtherTracker/lasot/lasot936/CNN-SVM/summary.csv"),
     TrackerSource("MDNet", "summary_csv", "OtherTracker/lasot/lasot936/MDNet/summary.csv"),
@@ -271,7 +272,8 @@ def plot_fps(entries: list[dict[str, object]], out_png: Path) -> None:
     fig.text(
         0.5,
         0.01,
-        "Metric = total_frames / total_time_sec over the 40 LaSOT head+tail sequences. MyTracker is highlighted in orange.",
+        "Metric = total_frames / total_time_sec over each tracker's available evaluated sequences. "
+        "MyTracker is highlighted in orange; PTAV currently reflects its 15-sequence representative subset.",
         ha="center",
         fontsize=10,
     )
@@ -285,12 +287,14 @@ def write_text_summary(entries: list[dict[str, object]], out_txt: Path) -> None:
         "LaSOT headtail40 final FPS report",
         "Metric: FPS_final_weighted_by_frames = total_frames / total_time_sec",
         f"Integrated trackers with runnable headtail40 outputs: {len(entries)}",
+        "Note: PTAV currently uses a 15-sequence representative subset rather than all 40 sequences.",
         "",
     ]
     for rank, entry in enumerate(entries, start=1):
         lines.append(
-            f"{rank:02d}. {entry['tracker']}: FPS_final={float(entry['fps_final']):.6f}, "
-            f"FPS_avg_seq={float(entry['fps_avg_seq']):.6f}, AUC={float(entry['auc']):.6f}"
+            f"{rank:02d}. {entry['tracker']}: valid_sequences={int(entry['valid_sequences'])}, "
+            f"FPS_final={float(entry['fps_final']):.6f}, FPS_avg_seq={float(entry['fps_avg_seq']):.6f}, "
+            f"AUC={float(entry['auc']):.6f}"
         )
     out_txt.write_text("\n".join(lines) + "\n", encoding="utf-8")
 

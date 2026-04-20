@@ -9,7 +9,7 @@ height = size(img_first, 1);
 startFrame = 1;
 endFrame = numel(imgs);
 
-sequence_path = video_path;
+sequence_path = fullfile(video_path, video);
 sequence_name = video;
 
 % sequence_path = 'sequences';
@@ -32,24 +32,41 @@ for i = 1:numel(content)
 end
 fclose(tmp_fid);
 
-command = './Struck/struck';
 result_file = fullfile('.', 'Struck', 'tmpStruckRes.txt');
 if exist(result_file, 'file')
     delete(result_file);
 end
 
-command = fullfile('.', 'Struck', 'struck');
 if ispc
-    command = strrep(command, '/', '\');
+    setenv('PATH', ['C:\opencv\opencv_build\cuda\install\x64\vc17\bin;' getenv('PATH')]);
+    candidates = { ...
+        fullfile('.', 'Struck', 'struck.exe'), ...
+        fullfile('.', 'Struck', 'build', 'bin', 'struck.exe'), ...
+        fullfile('.', 'Struck', 'build', 'bin', 'Release', 'struck.exe'), ...
+        fullfile('.', 'Struck', 'build-win64', 'bin', 'struck.exe'), ...
+        fullfile('.', 'Struck', 'build-win64', 'bin', 'Release', 'struck.exe'), ...
+        fullfile('.', 'Struck', 'build-win64', 'Release', 'struck.exe')};
+else
+    candidates = { ...
+        fullfile('.', 'Struck', 'struck'), ...
+        fullfile('.', 'Struck', 'build', 'bin', 'struck')};
 end
-status = system(['"' command '"']);
-if status ~= 0
-    alt_command = fullfile('.', 'Struck', 'build', 'bin', 'struck');
+
+status = 1;
+for i = 1:numel(candidates)
+    command = candidates{i};
     if ispc
-        alt_command = strrep(alt_command, '/', '\');
+        command = strrep(command, '/', '\');
     end
-    status = system(['"' alt_command '"']);
+    if exist(command, 'file') ~= 2
+        continue;
+    end
+    status = system(['"' command '"']);
+    if status == 0
+        break;
+    end
 end
+
 if status ~= 0
     error('demo_struck:binaryFailed', 'Failed to execute Struck binary.');
 end

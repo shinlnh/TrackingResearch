@@ -150,8 +150,7 @@ opts.cudaMethod       = [] ;
 opts.cudaRoot         = [] ;
 opts.cudaArch         = [] ;
 opts.defCudaArch      = [...
-  '-gencode=arch=compute_20,code=\"sm_20,compute_20\" '...
-  '-gencode=arch=compute_30,code=\"sm_30,compute_30\"'];
+  '-gencode=arch=compute_90,code=\"sm_90,compute_90\"'];
 opts.cudnnRoot        = 'local' ;
 opts = vl_argparse(opts, varargin);
 
@@ -229,6 +228,9 @@ end
 if opts.enableGpu
   opts.verbose && fprintf('%s: * CUDA configuration *\n', mfilename) ;
   if isempty(opts.cudaRoot), opts.cudaRoot = search_cuda_devkit(opts); end
+  if strcmp(arch, 'win64') && isempty(opts.cudaMethod)
+    opts.cudaMethod = 'nvcc';
+  end
   check_nvcc(opts.cudaRoot);
   opts.verbose && fprintf('%s:\tCUDA: using CUDA Devkit ''%s''.\n', ...
                           mfilename, opts.cudaRoot) ;
@@ -301,7 +303,8 @@ if opts.enableGpu
     case {'maci64', 'glnxa64'}
       flags.link{end+1} = '-lmwgpu' ;
     case 'win64'
-      flags.link{end+1} = '-lgpu' ;
+      flags.link{end+1} = ['-L"' fullfile(matlabroot, 'extern', 'lib', 'win64', 'microsoft') '"'] ;
+      flags.link{end+1} = 'gpumexbinder.lib' ;
   end
   if opts.enableCudnn
     flags.link{end+1} = ['-L' opts.cudnnRoot] ;
@@ -312,6 +315,7 @@ end
 % For the MEX command
 flags.mexcc = flags.cc ;
 flags.mexcc{end+1} = '-cxx' ;
+flags.mexcc{end+1} = '-R2018a' ;
 if strcmp(arch, 'maci64')
   flags.mexcc{end+1} = 'CXXFLAGS=$CXXFLAGS -stdlib=libstdc++' ;
   flags.link{end+1} = 'LDFLAGS=$LDFLAGS -stdlib=libstdc++' ;
@@ -319,15 +323,18 @@ end
 if opts.enableGpu
   flags.mexcu = flags.cc ;
   flags.mexcu{end+1} = '-cxx' ;
+  flags.mexcu{end+1} = '-R2018a' ;
   flags.mexcu(end+1:end+2) = {'-f' mex_cuda_config(root)} ;
   flags.mexcu{end+1} = ['NVCCFLAGS=' opts.cudaArch '$NVCC_FLAGS'] ;
 end
+flags.link{end+1} = '-R2018a' ;
 
 % For the cudaMethod='nvcc'
 if opts.enableGpu && strcmp(opts.cudaMethod,'nvcc')
   flags.nvcc = flags.cc ;
   flags.nvcc{end+1} = ['-I"' fullfile(matlabroot, 'extern', 'include') '"'] ;
   flags.nvcc{end+1} = ['-I"' fullfile(matlabroot, 'toolbox','distcomp','gpu','extern','include') '"'] ;
+  flags.nvcc{end+1} = ['-I"' fullfile(matlabroot, 'toolbox', 'parallel', 'gpu', 'extern', 'include') '"'] ;
   if opts.debug
     flags.nvcc{end+1} = '-O0' ;
   end
@@ -406,7 +413,7 @@ objs = strrep(objs,'.c',['.' objext]) ;
 % --------------------------------------------------------------------
 function objs = mex_compile(opts, src, tgt, mex_opts)
 % --------------------------------------------------------------------
-mopts = {'-outdir', fileparts(tgt), src, '-c', mex_opts{:}, '-largeArrayDims'} ;
+mopts = {'-outdir', fileparts(tgt), src, '-c', mex_opts{:}} ;
 opts.verbose && fprintf('%s: MEX: %s\n', mfilename, strjoin(mopts)) ;
 mex(mopts{:}) ;
 
@@ -462,23 +469,61 @@ function check_clpath()
 % --------------------------------------------------------------------
 % Checks whether the cl.exe is in the path (needed for the nvcc). If
 % not, tries to guess the location out of mex configuration.
-status = system('cl.exe -help');
+cc = mex.getCompilerConfigurations('c++', 'Selected');
+if isempty(cc)
+  error('Mex is not configured. Run "mex -setup".');
+end
+
+cl_exe = '';
+modern_root = fullfile(cc.Location, 'VC', 'Tools', 'MSVC');
+if exist(modern_root, 'dir')
+  versions = dir(modern_root);
+  versions = versions([versions.isdir]);
+  versions = versions(~ismember({versions.name}, {'.', '..'}));
+  version_names = sort({versions.name});
+  for i = numel(version_names):-1:1
+    candidate = fullfile(modern_root, version_names{i}, 'bin', 'HostX64', 'x64', 'cl.exe');
+    if exist(candidate, 'file') == 2
+      cl_exe = candidate;
+      break;
+    end
+  end
+end
+
+if isempty(cl_exe)
+  legacy_candidate = fullfile(cc.Location, 'VC', 'bin', 'amd64', 'cl.exe');
+  if exist(legacy_candidate, 'file') == 2
+    cl_exe = legacy_candidate;
+  end
+end
+
+if isempty(cl_exe)
+  [status, output] = system('where cl.exe');
+  if status == 0
+    paths = regexp(strtrim(output), '\r?\n', 'split');
+    if ~isempty(paths) && exist(paths{1}, 'file') == 2
+      cl_exe = paths{1};
+    end
+  end
+end
+
+if isempty(cl_exe)
+  error('Unable to find cl.exe');
+end
+
+cl_dir = fileparts(cl_exe);
+[status, ~] = system('cl.exe -help');
 if status == 1
   warning('CL.EXE not found in PATH. Trying to guess out of mex setup.');
-  cc = mex.getCompilerConfigurations('c++');
-  if isempty(cc)
-    error('Mex is not configured. Run "mex -setup".');
-  end
   prev_path = getenv('PATH');
-  cl_path = fullfile(cc.Location, 'VC','bin','x86_amd64');
-  setenv('PATH', [prev_path ';' cl_path]);
+  setenv('PATH', [prev_path ';' cl_dir]);
   status = system('cl.exe');
   if status == 1
     setenv('PATH', prev_path);
     error('Unable to find cl.exe');
   else
     fprintf('Location of cl.exe (%s) successfully added to your PATH.\n', ...
-      cl_path);
+      cl_dir);
   end
 end
 
@@ -507,6 +552,16 @@ opts.verbose && fprintf(['%s:\tCUDA: seraching for the CUDA Devkit' ...
 paths = {getenv('MW_NVCC_PATH')} ;
 paths = [paths, which_nvcc(opts)] ;
 for v = {'5.5', '6.0', '6.5', '7.0'}
+  switch computer('arch')
+    case 'glnxa64'
+      paths{end+1} = sprintf('/usr/local/cuda-%s/bin/nvcc', char(v)) ;
+    case 'maci64'
+      paths{end+1} = sprintf('/Developer/NVIDIA/CUDA-%s/bin/nvcc', char(v)) ;
+    case 'win64'
+      paths{end+1} = sprintf('C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v%s\\bin\\nvcc.exe', char(v)) ;
+  end
+end
+for v = {'7.5', '8.0', '8.5', '9.0', '9.5', '10.0', '12.4', '13.1'}
   switch computer('arch')
     case 'glnxa64'
       paths{end+1} = sprintf('/usr/local/cuda-%s/bin/nvcc', char(v)) ;
@@ -596,4 +651,3 @@ catch
                       'falling back to default\n'], mfilename);
   cudaArch = opts.defCudaArch;
 end
-

@@ -39,7 +39,8 @@ vector<FloatRect> Sampler::RadialSamples(FloatRect centre, int radius, int nr, i
 	
 	FloatRect s(centre);
 	float rstep = (float)radius/nr;
-	float tstep = 2*(float)M_PI/nt;
+	const float pi_value = 3.14159265358979323846f;
+	float tstep = 2*pi_value/nt;
 	samples.push_back(centre);
 	
 	for (int ir = 1; ir <= nr; ++ir)

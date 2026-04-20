@@ -46,8 +46,7 @@ for i = 1:size(tmpl, 1)
 
     tempIm = im(round(midH-h/2) : round(midH+h/2),...
                 round(midW-w/2) : round(midW+w/2), :);
-%     tempIm = imresize(tempIm, sz);
-    tempIm = mexResize(tempIm, sz, 'auto');
+    tempIm = resize_compat(tempIm, sz, 'auto');
 %     hogFeatures = extractHOGFeatures(tempIm);
     hogFeatures = fhog(single(tempIm*255), binSize);
     features(:, i) = hogFeatures(:) / norm(hogFeatures(:));

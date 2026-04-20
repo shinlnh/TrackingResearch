@@ -28,7 +28,15 @@ ys(ys > size(im,1)) = size(im,1);
 im_patch = im(ys, xs, :);
 
 %resize image to model size
-im_patch = mexResize(im_patch, model_sz, 'auto');
+if exist(['mexResize.' mexext], 'file') == 3
+    try
+        im_patch = mexResize(im_patch, model_sz, 'auto');
+    catch
+        im_patch = imresize(im_patch, model_sz, 'bilinear');
+    end
+else
+    im_patch = imresize(im_patch, model_sz, 'bilinear');
+end
 
 % compute non-pca feature map
 out_npca = [];

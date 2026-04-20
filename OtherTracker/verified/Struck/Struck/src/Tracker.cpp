@@ -41,8 +41,7 @@
 
 #include "LaRank.h"
 
-#include <opencv/cv.h>
-#include <opencv/highgui.h>
+#include "opencv_compat.h"
 
 #include <Eigen/Core>
 

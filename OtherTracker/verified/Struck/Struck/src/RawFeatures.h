@@ -30,7 +30,7 @@
 
 #include "Features.h"
 
-#include <opencv/cv.h>
+#include "opencv_compat.h"
 
 class Config;
 

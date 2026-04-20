@@ -1,0 +1,15 @@
+airplane-1
+airplane-13
+airplane-15
+airplane-9
+basketball-1
+basketball-11
+basketball-6
+basketball-7
+bear-17
+bear-2
+bear-4
+bear-6
+bicycle-2
+bicycle-7
+bicycle-9

@@ -15,12 +15,16 @@ $repoRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $repoRoot
 
 $pythonExe = Join-Path $repoRoot "venv312\Scripts\python.exe"
+$structSiamPython = Join-Path $repoRoot "OtherTracker\verified\StructSiam\.venv39\Scripts\python.exe"
 $sequenceFile = Join-Path $repoRoot "OtherTracker\lasot\lasot936\headtail40_sequences.txt"
 $outputDir = Join-Path $repoRoot ("OtherTracker\lasot\lasot936\" + $Tracker)
 $resultsDir = Join-Path $outputDir ("tracking_results\" + $Tracker)
 $logPath = Join-Path $outputDir "tracking.log"
 $summaryPath = Join-Path $outputDir "summary.csv"
 $postprocess = Join-Path $repoRoot "OtherTracker\tools\postprocess_lasot_headtail40_tracker.py"
+$structSiamRunner = Join-Path $repoRoot "OtherTracker\tools\run_structsiam_headtail40.py"
+$sintRunner = Join-Path $repoRoot "OtherTracker\tools\run_sint_headtail40.py"
+$lasotRoot = Join-Path $repoRoot "ls\lasot"
 
 if ($Smoke) {
     $StartIndex = 1
@@ -60,9 +64,22 @@ print(f"Removed {removed} old result files from {results_dir}")
 '@ | & $pythonExe - $Tracker $StartIndex $EndIndex
 }
 
-$matlabCmd = "addpath(fullfile(pwd,'OtherTracker','tools')); run_verified_lasot_headtail40('$Tracker', '', '', '', $StartIndex, $EndIndex);"
-cmd /c "set PYTHONUNBUFFERED=1 && matlab -batch ""$matlabCmd"" 2>&1" |
-    Tee-Object -FilePath $logPath
+$trackerKey = $Tracker.ToLowerInvariant()
+if ($trackerKey -eq "structsiam") {
+    $structSiamCmd = "`"$structSiamPython`" `"$structSiamRunner`" --repo-root `"$repoRoot`" --sequence-file `"$sequenceFile`" --lasot-root `"$lasotRoot`" --results-dir `"$resultsDir`" --start-index $StartIndex --end-index $EndIndex"
+    cmd /c "set PYTHONUNBUFFERED=1 && set TF_CPP_MIN_LOG_LEVEL=2 && $structSiamCmd 2>&1" |
+        Tee-Object -FilePath $logPath
+}
+elseif ($trackerKey -eq "sint") {
+    $sintCmd = "`"$structSiamPython`" `"$sintRunner`" --sequence-file `"$sequenceFile`" --lasot-root `"$lasotRoot`" --results-dir `"$resultsDir`" --start-index $StartIndex --end-index $EndIndex"
+    cmd /c "set PYTHONUNBUFFERED=1 && set OPENCV_OPENCL_DEVICE=NVIDIA:GPU: && $sintCmd 2>&1" |
+        Tee-Object -FilePath $logPath
+}
+else {
+    $matlabCmd = "addpath(fullfile(pwd,'OtherTracker','tools')); run_verified_lasot_headtail40('$Tracker', '', '', '', $StartIndex, $EndIndex);"
+    cmd /c "set PYTHONUNBUFFERED=1 && matlab -batch ""$matlabCmd"" 2>&1" |
+        Tee-Object -FilePath $logPath
+}
 
 $runExitCode = $LASTEXITCODE
 if ($runExitCode -ne 0) {

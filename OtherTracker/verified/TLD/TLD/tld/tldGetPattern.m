@@ -31,6 +31,10 @@ for i = 1:nBB
     
     % sample patch
     patch = img_patch(img.input,bb(:,i));
+
+    if isempty(patch) || size(patch,1) == 0 || size(patch,2) == 0
+        continue;
+    end
     
     % flip if needed
     if flip

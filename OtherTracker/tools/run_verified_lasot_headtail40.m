@@ -3,7 +3,8 @@ function summary = run_verified_lasot_headtail40(tracker_name, lasot_root, seque
 %
 % Supported trackers in this generic driver:
 %   ASLA, BACF, CN, CSK, CT, CSRDCF, DSiam, ECO_HC, fDSST, IVT,
-%   L1APG, MIL, SCT4, SiamFC, Staple_CA, STC, STRCF, Struck, TLD
+%   HCFT, L1APG, MIL, PTAV, SCT4, SiamFC, Staple_CA, STC, STRCF,
+%   Struck, TLD, TRACA, VITAL
 
 repo_root = fileparts(fileparts(fileparts(mfilename('fullpath'))));
 
@@ -187,31 +188,60 @@ switch lower(tracker_name)
         cfg = simple_path_cfg('CT', 'CT', {'CT'}, '', 'Runtracker');
     case 'csrdcf'
         cfg = simple_path_cfg('CSRDCF', 'CSRDCF', {'CSRDCF', 'CSRDCF/utils', 'CSRDCF/features', 'CSRDCF/mex'}, '', 'demo_csr');
+    case 'cfnet'
+        cfg = struct();
+        cfg.tracker_label = 'CFNet';
+        cfg.root_dir = 'cfnet-master';
+        cfg.result_dir = 'CFNet';
+        cfg.addpaths = {'src/tracking', 'src/util'};
+        cfg.setup_cmd = [ ...
+            'ensure_cfnet_assets(pwd); ' ...
+            'ensure_tracker_matconvnet(fullfile(fileparts(pwd), ''DSiam'', ''DSiam'', ''matconvnet''), true); ' ...
+            'addpath(fullfile(fileparts(pwd), ''DSiam'', ''DSiam'', ''matconvnet'', ''matlab'')); ' ...
+            'vl_setupnn();'];
+        cfg.run_function = 'run_cfnet_lasot';
+        cfg.call_style = 'path_name';
     case 'dsiam'
         cfg = struct();
         cfg.tracker_label = 'DSiam';
         cfg.root_dir = 'DSiam';
         cfg.result_dir = 'DSiam';
         cfg.addpaths = {'DSiam', 'DSiam/utils', 'DSiam/models', 'DSiam/matconvnet/matlab'};
-        cfg.setup_cmd = 'vl_setupnn;';
+        cfg.setup_cmd = 'ensure_tracker_matconvnet(fullfile(pwd, ''DSiam'', ''matconvnet''), true); vl_setupnn;';
         cfg.run_function = 'run_DSiam_tracker';
         cfg.call_style = 'dsiam_seq';
     case 'eco_hc'
         cfg = simple_path_cfg('ECO_HC', 'ECO_HC', {'ECO_HC'}, 'setup_paths();', 'demo_ECO_HC_gpu');
     case 'fdsst'
         cfg = simple_path_cfg('fDSST', 'fDSST', {'fDSST'}, '', 'run_tracker');
+    case 'hcft'
+        cfg = struct();
+        cfg.tracker_label = 'HCFT';
+        cfg.root_dir = 'HCFTstar-master';
+        cfg.result_dir = 'HCFT';
+        cfg.addpaths = {'utility', 'train'};
+        cfg.genpaths = {'edgesbox', 'piotr_toolbox', 'Diagnose'};
+        cfg.setup_cmd = [ ...
+            'ensure_piotr_toolbox(fullfile(pwd, ''piotr_toolbox'')); ' ...
+            'ensure_tracker_matconvnet(fullfile(fileparts(pwd), ''DSiam'', ''DSiam'', ''matconvnet''), true); ' ...
+            'addpath(fullfile(fileparts(pwd), ''DSiam'', ''DSiam'', ''matconvnet'', ''matlab'')); ' ...
+            'vl_setupnn();'];
+        cfg.run_function = 'run_hcftstar_lasot';
+        cfg.call_style = 'classdir_name';
     case 'ivt'
         cfg = simple_path_cfg('IVT', 'IVT', {'IVT'}, '', 'runtracker');
     case 'l1apg'
         cfg = simple_path_cfg('L1APG', 'L1APG', {'L1APG'}, '', 'L1APG_demo');
     case 'mil'
         cfg = simple_path_cfg('MIL', 'MIL', {'MIL'}, '', 'MIL_main');
+    case 'ptav'
+        cfg = simple_path_cfg('PTAV', 'PTAV/serial_ptav_v1', {'util'}, '', 'run_PTAV_lasot');
     case 'sct4'
         cfg = simple_path_cfg('SCT4', 'SCT4', {'SCT4', 'SCT4/KCF', 'SCT4/strong'}, '', 'run_tracker');
         cfg.genpaths = {'SCT4/PiotrDollarToolbox'};
     case 'siamfc'
         cfg = simple_path_cfg('SiamFC', 'SiamFC', {'SiamFC/tracking', 'SiamFC/util', 'SiamFC/matconvnet/matlab'}, ...
-            'vl_setupnn;', 'run_tracker');
+            'ensure_tracker_matconvnet(fullfile(pwd, ''SiamFC'', ''matconvnet''), true); vl_setupnn;', 'run_tracker');
     case 'staple_ca'
         cfg = simple_path_cfg('Staple_CA', 'Staple_CA', {'Staple_CA'}, '', 'runTracker');
     case 'stc'
@@ -226,10 +256,32 @@ switch lower(tracker_name)
         cfg.run_function = 'run_STRCF_code';
         cfg.call_style = 'seq_struct';
     case 'struck'
-        cfg = simple_path_cfg('Struck', 'Struck', {'Struck'}, '', 'demo_struck');
+        cfg = simple_path_cfg('Struck', 'Struck', {'Struck'}, 'ensure_struck_windows(fullfile(pwd, ''Struck''));', 'demo_struck');
         cfg.call_style = 'classdir_name';
     case 'tld'
-        cfg = simple_path_cfg('TLD', 'TLD', {'TLD', 'TLD/tld', 'TLD/utils_tld', 'TLD/img_tld', 'TLD/mex_tld', 'TLD/bbox_tld'}, '', 'run_TLD_demo');
+        cfg = simple_path_cfg('TLD', 'TLD', {'TLD', 'TLD/tld', 'TLD/utils_tld', 'TLD/img_tld', 'TLD/mex_tld', 'TLD/bbox_tld'}, ...
+            'ensure_tld_mex(fullfile(pwd, ''TLD''));', 'run_TLD_demo');
+    case 'traca'
+        cfg = struct();
+        cfg.tracker_label = 'TRACA';
+        cfg.root_dir = 'TRACA-master';
+        cfg.result_dir = 'TRACA';
+        cfg.addpaths = {};
+        cfg.setup_cmd = [ ...
+            'ensure_traca_assets(pwd); ' ...
+            'ensure_tracker_matconvnet(fullfile(fileparts(pwd), ''DSiam'', ''DSiam'', ''matconvnet''), true);'];
+        cfg.run_function = 'run_traca_lasot';
+        cfg.call_style = 'classdir_name';
+    case 'vital'
+        cfg = struct();
+        cfg.tracker_label = 'VITAL';
+        cfg.root_dir = 'Vital_release-master';
+        cfg.result_dir = 'VITAL';
+        cfg.addpaths = {'tracking', 'utils', 'vital', 'matconvnet/matlab'};
+        cfg.setup_cmd = ['ensure_tracker_matconvnet(fullfile(pwd, ''matconvnet''), true, ' ...
+            '{''vl_nnconv'', ''vl_nnpool'', ''vl_nnnormalize''}); vl_setupnn();'];
+        cfg.run_function = 'run_vital_lasot';
+        cfg.call_style = 'path_name';
     otherwise
         error('run_verified_lasot_headtail40:unsupportedTracker', ...
             'Unsupported tracker: %s', tracker_name);

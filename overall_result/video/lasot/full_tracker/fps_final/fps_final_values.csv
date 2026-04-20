@@ -15,4 +15,5 @@ rank,tracker,valid_sequences,AUC,Precision,Success50,FPS_final_weighted_by_frame
 14,DSST,40,17.657188,17.512354,16.203388,4.893721,90.749543,29.910580,99468,20325.637826,summary_csv,OtherTracker\lasot\lasot936\DSST\summary.csv
 15,CF2,40,26.798843,25.858942,24.205021,2.722565,16.168986,9.990374,99468,36534.668907,summary_csv,OtherTracker\lasot\lasot936\CF2\summary.csv
 16,SRDCFdecon,40,22.517923,20.742365,24.133284,1.976791,2.718301,1.903080,99468,50317.921198,summary_csv,OtherTracker\lasot\lasot936\SRDCFdecon\summary.csv
-17,HDT,40,21.405817,23.348637,15.965003,0.977990,2.025625,2.040444,99468,101706.519123,summary_csv,OtherTracker\lasot\lasot936\HDT\summary.csv
+17,PTAV,15,27.170771,22.159543,30.550233,0.982637,1.413483,1.217847,45565,46370.115880,summary_csv,OtherTracker\lasot\lasot936\PTAV\summary.csv
+18,HDT,40,21.405817,23.348637,15.965003,0.977990,2.025625,2.040444,99468,101706.519123,summary_csv,OtherTracker\lasot\lasot936\HDT\summary.csv

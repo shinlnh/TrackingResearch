@@ -77,4 +77,89 @@ if(useSingle), outClass='single'; else outClass='double'; end
 if(isempty(I) && flag>0 && flag~=4), I=I(:,:,[1 1 1]); end
 d=size(I,3); if(flag==4), flag=1; end; norm=(d==1 && flag==0) || flag==1;
 if( norm && isa(I,outClass) ), J=I; return; end
-J=rgbConvertMex(I,flag,useSingle);
+try
+  J=rgbConvertMex(I,flag,useSingle);
+catch
+  J=rgbConvertFallback(I,flag,useSingle);
+end
+
+function J = rgbConvertFallback(I,flag,useSingle)
+if useSingle
+  castfn = @single;
+else
+  castfn = @double;
+end
+
+I = castfn(I);
+if isa(I, 'uint8')
+  I = castfn(I) / castfn(255);
+elseif max(I(:)) > 1.001
+  I = I / castfn(255);
+end
+
+d = size(I, 3);
+switch flag
+  case 0
+    if d == 1
+      J = I;
+    else
+      J = zeros(size(I,1), size(I,2), d/3, class(I));
+      for k = 1:(d/3)
+        chunk = I(:, :, (k-1)*3 + (1:3));
+        J(:, :, k) = castfn(0.2989360213) * chunk(:, :, 1) + ...
+                     castfn(0.5870430745) * chunk(:, :, 2) + ...
+                     castfn(0.1140209043) * chunk(:, :, 3);
+      end
+    end
+  case 1
+    J = I;
+  case 2
+    assert(mod(d, 3) == 0, 'I must have third dimension d==1 or (d/3)*3==d.');
+    J = zeros(size(I), class(I));
+    for k = 1:(d/3)
+      chunk = I(:, :, (k-1)*3 + (1:3));
+      J(:, :, (k-1)*3 + (1:3)) = rgb_to_luv(chunk, castfn);
+    end
+  case 3
+    assert(mod(d, 3) == 0, 'I must have third dimension d==1 or (d/3)*3==d.');
+    J = zeros(size(I), class(I));
+    for k = 1:(d/3)
+      chunk = I(:, :, (k-1)*3 + (1:3));
+      J(:, :, (k-1)*3 + (1:3)) = castfn(rgb2hsv(double(chunk)));
+    end
+  otherwise
+    error('Unknown flag.');
+end
+
+function J = rgb_to_luv(I, castfn)
+z = castfn(1);
+mr = [0.430574*z, 0.222015*z, 0.020183*z];
+mg = [0.341550*z, 0.706655*z, 0.129553*z];
+mb = [0.178325*z, 0.071330*z, 0.939180*z];
+un = castfn(0.197833);
+vn = castfn(0.468331);
+maxi = castfn(1/270);
+minu = castfn(-88) * maxi;
+minv = castfn(-134) * maxi;
+y0 = castfn((6/29)^3);
+a = castfn((29/3)^3);
+
+R = I(:, :, 1);
+G = I(:, :, 2);
+B = I(:, :, 3);
+x = mr(1) * R + mg(1) * G + mb(1) * B;
+y = mr(2) * R + mg(2) * G + mb(2) * B;
+zv = mr(3) * R + mg(3) * G + mb(3) * B;
+
+L = zeros(size(y), class(I));
+mask = y > y0;
+L(mask) = (castfn(116) * nthroot(double(y(mask)), 3) - castfn(16)) * maxi;
+L(~mask) = y(~mask) * a * maxi;
+
+den = x + castfn(15) * y + castfn(3) * zv + castfn(1e-35);
+U = L .* (castfn(13*4) * x ./ den - castfn(13) * un) - minu;
+V = L .* (castfn(13*9) * y ./ den - castfn(13) * vn) - minv;
+J = cat(3, castfn(L), castfn(U), castfn(V));
+end
+end
+end

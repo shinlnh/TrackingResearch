@@ -30,7 +30,7 @@ function results = run_Diagnose(seq, res_path, bSaveImage)
         end
         if (seq.opt.useNormalSize)
 %           frame = imresize(frame, [seq.opt.normalHeight, seq.opt.normalWidth]);
-            frame = mexResize(frame, [seq.opt.normalHeight, seq.opt.normalWidth], 'auto');
+            frame = resize_compat(frame, [seq.opt.normalHeight, seq.opt.normalWidth], 'auto');
         end
         frame = im2double(frame);
         

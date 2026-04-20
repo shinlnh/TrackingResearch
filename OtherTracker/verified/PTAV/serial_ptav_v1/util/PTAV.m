@@ -144,20 +144,18 @@ for frame = 1:num_frames,
             current_box = [pos([2,1]) - current_sz([2,1])/2, current_sz([2,1])];
             
             input_roi = get_rois(current_box, verify_param.imageSz, im_color);
-            input_im  = prepare_image(im_color, verify_param.imageSz, verify_param.pixel_means);
-            
-            input_blobs    = cell(2, 1);
-            input_blobs{1} = input_im;
-            net.blobs('rois').reshape([5, size(input_roi, 1)]);
-            input_blobs{2} = input_roi';
-            
-            blobs_out = net.forward(input_blobs);
-            tfeat     = squeeze(blobs_out{1});
-            
-            % compute verification score
-            score     = tfeat' * verify_param.firstframe_feat; 
-            
-            score = max(score(:));
+            if isempty(input_roi)
+                score = -inf;
+            else
+                tfeat = ptav_extract_features(im_color, input_roi, verify_param.pixel_means, verify_param.imageSz);
+                if isempty(tfeat)
+                    score = -inf;
+                else
+                    % compute verification score
+                    score = tfeat' * verify_param.firstframe_feat;
+                    score = max(score(:));
+                end
+            end
 %             fprintf('frame:%d, score: %f\n', frame, score);
             
             if score < verify_param.threshold

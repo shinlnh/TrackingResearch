@@ -17,6 +17,13 @@
 
 function pattern = tldPatch2Pattern(patch,patchsize)
 
+pattern = zeros(prod(patchsize), 1);
+
+if isempty(patch) || size(patch,1) == 0 || size(patch,2) == 0
+    return;
+end
+
 patch   = imresize(patch,patchsize); % 'bilinear' is faster
 pattern = double(patch(:));
+pattern(~isfinite(pattern)) = 0;
 pattern = pattern - mean(pattern);

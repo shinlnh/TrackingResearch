@@ -1,0 +1,2 @@
+tracker,scope,valid_sequences,AUC,Precision,Success50,FPS_avg_seq,FPS_median_seq,FPS_weighted_by_frames,total_frames,total_time_sec
+StructSiam,headtail40,40,28.610889146055097,34.903790089515276,31.63986674790868,44.87306265228169,42.55073452179885,39.201603359923126,99468,2537.3451969999996

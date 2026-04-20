@@ -35,5 +35,14 @@ function B = imResample_fast( A, scale, method, norm )
 
 % figure out method and get target dimensions
 
-% use bilinear interpolation
-B=imResampleMex(A,scale(1),scale(2),1);
+if exist(['imResampleMex.' mexext], 'file') == 3
+  B = imResampleMex(A, scale(1), scale(2), 1);
+  return;
+end
+
+target_size = round(scale);
+if numel(target_size) ~= 2
+  error('imResample_fast:invalidScale', 'scale must be a 1x2 target size.');
+end
+target_size = max(target_size(:)', [1 1]);
+B = imresize(A, target_size, 'bilinear', 'Antialiasing', false);

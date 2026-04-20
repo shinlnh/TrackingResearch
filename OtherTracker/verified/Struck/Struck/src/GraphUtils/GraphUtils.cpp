@@ -9,11 +9,15 @@
 //#include <tchar.h>
 
 // OpenCV
-#include <opencv/cv.h>
-#include <opencv/cxcore.h>
+#include "../opencv_compat.h"
 #ifdef USE_HIGHGUI
-	#include <opencv/highgui.h>
+	#include "../opencv_compat.h"
 #endif
+
+#ifdef CV_RGB
+#undef CV_RGB
+#endif
+#define CV_RGB(r,g,b) cvScalar((b),(g),(r),0)
 
 #ifndef UCHAR
 	typedef unsigned char UCHAR;

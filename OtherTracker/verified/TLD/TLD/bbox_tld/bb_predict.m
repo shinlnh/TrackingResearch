@@ -18,16 +18,47 @@
 
 function [BB1 shift] = bb_predict(BB0,pt0,pt1)
 
+BB1 = [];
+shift = [0; 0];
+
+if isempty(BB0) || size(pt0, 2) < 2 || size(pt1, 2) < 2
+    return;
+end
+
+valid = all(isfinite(pt0), 1) & all(isfinite(pt1), 1);
+pt0 = pt0(:, valid);
+pt1 = pt1(:, valid);
+
+if size(pt0, 2) < 2 || size(pt1, 2) < 2
+    return;
+end
+
 of  = pt1 - pt0;
 dx  = median(of(1,:));
 dy  = median(of(2,:));
 
 d1  = pdist(pt0','euclidean');
 d2  = pdist(pt1','euclidean');
-s   = median(d2./d1);
+ratio = d2 ./ max(d1, eps);
+ratio = ratio(isfinite(ratio) & ratio > 0);
+
+if isempty(ratio) || ~isfinite(dx) || ~isfinite(dy)
+    return;
+end
+
+s   = median(ratio);
 
 s1  = 0.5*(s-1)*bb_width(BB0);
 s2  = 0.5*(s-1)*bb_height(BB0);
 
+if ~isfinite(s1) || ~isfinite(s2)
+    return;
+end
+
 BB1  = [BB0(1)-s1; BB0(2)-s2; BB0(3)+s1; BB0(4)+s2] + [dx; dy; dx; dy];
+if ~all(isfinite(BB1)) || BB1(3) < BB1(1) || BB1(4) < BB1(2)
+    BB1 = [];
+    return;
+end
+
 shift = [s1; s2];

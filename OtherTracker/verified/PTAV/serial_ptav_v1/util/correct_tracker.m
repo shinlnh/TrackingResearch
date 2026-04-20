@@ -14,23 +14,24 @@ rect          = [pos([2,1]) - t_sz([2,1])/2, t_sz([2,1])];
 
 % get candidates from the surrounding region (sliding window strategy)
 object_cand_boxes = get_candidates(new_im_color, t_sz, verify_param.scale);
+score = -inf;
+
+if isempty(object_cand_boxes)
+    return;
+end
 
 object_cand_boxes(:, 1) = object_cand_boxes(:, 1) + new_rect(1);
 object_cand_boxes(:, 2) = object_cand_boxes(:, 2) + new_rect(2);
 
 % obtain features for all candidate
 input_roi   = get_rois(object_cand_boxes, verify_param.imageSz, im_color);
-input_im    = prepare_image(im_color, verify_param.imageSz, verify_param.pixel_means);
-
-input_blobs    = cell(2, 1);
-input_blobs{1} = input_im;
-net.blobs('rois').reshape([5, size(input_roi, 1)]);
-input_blobs{2} = input_roi';
-
-blobs_out    = net.forward(input_blobs);
-
-out          = blobs_out{1};
-tfeat        = squeeze(out(size(out, 1), size(out, 2), :, :));
+if isempty(input_roi)
+    return;
+end
+tfeat        = ptav_extract_features(im_color, input_roi, verify_param.pixel_means, verify_param.imageSz);
+if isempty(tfeat)
+    return;
+end
 
 % compute verification score for each candidate within one batch
 tmp_score    = tfeat' * verify_param.firstframe_feat;

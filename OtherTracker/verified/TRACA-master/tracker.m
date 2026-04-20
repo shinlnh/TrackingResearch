@@ -1,8 +1,12 @@
-function [performance, online_time] = tracker(BENCHMARK_PATH, opt, MATCONVNET_PATH, PIOTR_PATH)
+function [performance, online_time, tracked_positions] = tracker(BENCHMARK_PATH, opt, MATCONVNET_PATH, PIOTR_PATH, single_scene)
+
+if nargin < 5
+    single_scene = '';
+end
 
 % library load
-run([MATCONVNET_PATH 'matlab/vl_setupnn.m']);
-addpath(genpath([PIOTR_PATH 'toolbox/']));
+run(fullfile(MATCONVNET_PATH, 'matlab', 'vl_setupnn.m'));
+addpath(genpath(PIOTR_PATH));
 addpath('./tools');
 addpath('./ae_train');
 addpath('./cf_tracker');
@@ -11,10 +15,17 @@ addpath('./cf_tracker');
 % tracking dataset path
 scene_list = dir(BENCHMARK_PATH);
 scene_list = scene_list(3:end);
+if ~isempty(single_scene)
+    scene_mask = strcmp({scene_list.name}, single_scene);
+    scene_list = scene_list(scene_mask);
+    assert(~isempty(scene_list), 'TRACA:missingScene', ...
+        'Could not find scene "%s" under %s', single_scene, BENCHMARK_PATH);
+end
 
 % init
 online_time = 0;
 performance = 0;
+tracked_positions = [];
 
 % parameters
 target_layers = 7;
@@ -84,6 +95,7 @@ if(gpus > 0)
 end
 cf_params.yv = yv;
 cf_params.yf = yf;
+cf_params.yf2_single = yf2;
 cf_params.yf2 = repmat(yf2, [1,1,val_min]);
 cf_params.bbox_bmap = bbox_bmap;
 cf_params.cos_window = cos_window;
@@ -107,7 +119,7 @@ for scene_idx = 1:length(scene_list)
     % roi extraction
     [img_files, pos, target_sz, ground_truth, video_path] = load_video_info(BENCHMARK_PATH, scene_list(scene_idx).name);
         
-    im = imread([BENCHMARK_PATH, scene_list(scene_idx).name, '/img/', img_files{1}]);
+    im = imread(fullfile(BENCHMARK_PATH, scene_list(scene_idx).name, 'img', img_files{1}));
     window_sz = round(target_sz.*roi_resize_factor);
     init_window_sz = window_sz;
     
@@ -257,8 +269,10 @@ for scene_idx = 1:length(scene_list)
     ocp_ratio = sum(sum(bsxfun(@times, abs(x), cf_params.bbox_bmap), 1), 2) ./ (sum(sum(abs(x), 1), 2) + epsilon);
 
     % foreground layer selecting
-    sorted_ocp = sort(ocp_ratio, 'descend');
-    sel_layers = find(ocp_ratio >= sorted_ocp(val_min));
+    num_sel_layers = min(val_min, size(x, 3));
+    [~, sorted_idx] = sort(ocp_ratio(:), 'descend');
+    sel_layers = sort(sorted_idx(1:num_sel_layers));
+    cf_params.yf2 = repmat(cf_params.yf2_single, [1, 1, numel(sel_layers)]);
         
     xf = fft2(bsxfun(@times, cf_params.cos_window, x(:,:,sel_layers)));    
     wf = gather(bsxfun(@times, cf_params.yf2, xf ./ (xf.*conj(xf) + cf_params.lambda)));
@@ -282,7 +296,7 @@ for scene_idx = 1:length(scene_list)
         % ROI extraction
         prev_im = im;
         
-        im = imread([BENCHMARK_PATH, scene_list(scene_idx).name, '/img/', img_files{frame_idx}]);   
+        im = imread(fullfile(BENCHMARK_PATH, scene_list(scene_idx).name, 'img', img_files{frame_idx}));
                 
         tic;
                 
@@ -328,6 +342,9 @@ for scene_idx = 1:length(scene_list)
         
                 
         % correlation filter estimation (update)
+        if size(cf_params.yf2, 3) ~= size(xf_update, 3)
+            cf_params.yf2 = repmat(cf_params.yf2_single, [1, 1, size(xf_update, 3)]);
+        end
         wf_curr = cf_params.yf2.* xf_update ./ (xf_update.*conj(xf_update) + cf_params.lambda);
         wf = (1-cf_params.gamma)*wf + cf_params.gamma*wf_curr;  
                                 
@@ -477,7 +494,10 @@ for scene_idx = 1:length(scene_list)
     performance = performance + temp_perf;
     online_time = online_time + timeh / (length(img_files(:)) - 1);    
     
-    save(['result/' scene_list(scene_idx).name], 'positions');
+    if isempty(single_scene)
+        save(['result/' scene_list(scene_idx).name], 'positions');
+    end
+    tracked_positions = positions;
     
 end
 

@@ -62,12 +62,18 @@ if( isempty(I) || (r==0 && s==1) ), J = I; return; end
 m=min(size(I,1),size(I,2)); if( m<4 || 2*r+1>=m ), nomex=1; end
 
 if( nomex==0 )
-  if( r==1 && s<=2 )
-    J = convConst('convTri1',I,1,s);
-  else
-    J = convConst('convBox',I,r,s);
+  try
+    if( r==1 && s<=2 )
+      J = convConst('convTri1',I,1,s);
+    else
+      J = convConst('convBox',I,r,s);
+    end
+  catch
+    nomex = 1;
   end
-else
+end
+
+if( nomex~=0 )
   f = ones(1,2*r+1); f=f/sum(f);
   J = padarray(I,[r r],'symmetric','both');
   J = convn(convn(J,f,'valid'),f','valid');

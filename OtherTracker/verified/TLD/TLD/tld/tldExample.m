@@ -32,6 +32,9 @@ rect = opt.init_rect;
 source.bb = [rect(1),rect(2),rect(1)+rect(3)-1,rect(2)+rect(4)-1]';
 opt.source = source; 
 opt.nFrames=length(opt.s_frames);
+if ~isfield(opt,'seq_name') || isempty(opt.seq_name)
+    opt.seq_name = 'unknown';
+end
 
 tld = tldInit(opt,[]); % train initial detector and initialize the 'tld' structure
 
@@ -53,6 +56,9 @@ end
 % RUN-TIME ----------------------------------------------------------------
 totalTime=0;
 for i = 2:length(opt.s_frames) % for every frame
+    if i == 2 || mod(i,100) == 0 || i == length(opt.s_frames)
+        fprintf('[tld] %s frame %d/%d\n', opt.seq_name, i, length(opt.s_frames));
+    end
     
 %     disp(num2str(i));
     
@@ -64,7 +70,12 @@ for i = 2:length(opt.s_frames) % for every frame
 %     end
     
     tic
-    tld = tldProcessFrame(tld,i); % process frame i
+    try
+        tld = tldProcessFrame(tld,i); % process frame i
+    catch ME
+        fprintf(2,'[tld-crash] %s frame %d/%d: %s\n', opt.seq_name, i, length(opt.s_frames), ME.message);
+        rethrow(ME);
+    end
     totalTime=totalTime+toc;
     
     % display results on frame i

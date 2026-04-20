@@ -319,7 +319,8 @@ void fhog( float *M, float *O, float *H, int h, int w, int binSize,
 #ifdef MATLAB_MEX_FILE
 // Create [hxwxd] mxArray array, initialize to 0 if c=true
 mxArray* mxCreateMatrix3( int h, int w, int d, mxClassID id, bool c, void **I ){
-  const int dims[3]={h,w,d}, n=h*w*d; int b; mxArray* M;
+  const mwSize dims[3]={mwSize(h),mwSize(w),mwSize(d)}, n=mwSize(h)*mwSize(w)*mwSize(d);
+  int b; mxArray* M;
   if( id==mxINT32_CLASS ) b=sizeof(int);
   else if( id==mxDOUBLE_CLASS ) b=sizeof(double);
   else if( id==mxSINGLE_CLASS ) b=sizeof(float);
@@ -333,11 +334,12 @@ mxArray* mxCreateMatrix3( int h, int w, int d, mxClassID id, bool c, void **I ){
 void checkArgs( int nl, mxArray *pl[], int nr, const mxArray *pr[], int nl0,
   int nl1, int nr0, int nr1, int *h, int *w, int *d, mxClassID id, void **I )
 {
-  const int *dims; int nDims;
+  const mwSize *dims; int nDims;
   if( nl<nl0 || nl>nl1 ) mexErrMsgTxt("Incorrect number of outputs.");
   if( nr<nr0 || nr>nr1 ) mexErrMsgTxt("Incorrect number of inputs.");
   nDims = mxGetNumberOfDimensions(pr[0]); dims = mxGetDimensions(pr[0]);
-  *h=dims[0]; *w=dims[1]; *d=(nDims==2) ? 1 : dims[2]; *I = mxGetPr(pr[0]);
+  *h=(int)dims[0]; *w=(int)dims[1]; *d=(nDims==2) ? 1 : (int)dims[2];
+  *I = mxGetData(pr[0]);
   if( nDims!=2 && nDims!=3 ) mexErrMsgTxt("I must be a 2D or 3D array.");
   if( mxGetClassID(pr[0])!=id ) mexErrMsgTxt("I has incorrect type.");
 }
@@ -370,7 +372,7 @@ void mGradMagNorm( int nl, mxArray *pl[], int nr, const mxArray *pr[] ) {
   checkArgs(nl,pl,nr,pr,0,0,3,3,&h,&w,&d,mxSINGLE_CLASS,(void**)&M);
   if( mxGetM(pr[1])!=h || mxGetN(pr[1])!=w || d!=1 ||
     mxGetClassID(pr[1])!=mxSINGLE_CLASS ) mexErrMsgTxt("M or S is bad.");
-  S = (float*) mxGetPr(pr[1]); norm = (float) mxGetScalar(pr[2]);
+  S = (float*) mxGetData(pr[1]); norm = (float) mxGetScalar(pr[2]);
   gradMagNorm(M,S,h,w,norm);
 }
 
@@ -379,7 +381,7 @@ void mGradHist( int nl, mxArray *pl[], int nr, const mxArray *pr[] ) {
   int h, w, d, hb, wb, nChns, binSize, nOrients, softBin, useHog;
   bool full; float *M, *O, *H, clipHog;
   checkArgs(nl,pl,nr,pr,1,3,2,8,&h,&w,&d,mxSINGLE_CLASS,(void**)&M);
-  O = (float*) mxGetPr(pr[1]);
+  O = (float*) mxGetData(pr[1]);
   if( mxGetM(pr[1])!=h || mxGetN(pr[1])!=w || d!=1 ||
     mxGetClassID(pr[1])!=mxSINGLE_CLASS ) mexErrMsgTxt("M or O is bad.");
   binSize  = (nr>=3) ? (int)   mxGetScalar(pr[2])    : 8;

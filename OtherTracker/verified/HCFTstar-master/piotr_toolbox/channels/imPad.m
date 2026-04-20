@@ -36,24 +36,29 @@ function J = imPad( I, pad, type )
 % Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
 % Licensed under the Simplified BSD License [see external/bsd.txt]
 
-J = imPadMex( I, pad, type );
+try
+  J = imPadMex( I, pad, type );
+  return;
+catch
+end
 
-%%% OLD Matlab code - slower (although still faster than padarray)
-% [h,w,~]=size(I); p=pad; k=length(p);
-% if(k==1), p=[p p p p]; elseif(k==2), p=[p(1) p(1) p(2) p(2)]; end
-% if( length(type)==1 )
-%   J=imPad(I,p,'replicate'); v=feval(class(I),type);
-%   J(1:p(1),:,:)=v; J(end-p(2)+1:end,:,:)=v;
-%   J(:,1:p(3),:)=v; J(:,end-p(4)+1:end,:)=v;
-%   return;
-% elseif( strcmp(type,'replicate') )
-%   rs = [uint32(ones(1,p(1))) 1:h h*ones(1,p(2))];
-%   cs = [uint32(ones(1,p(3))) 1:w w*ones(1,p(4))];
-% elseif( strcmp(type,'symmetric') )
-%   rs = uint32([1:h h:-1:1]); rs=rs(mod(-p(1):h+p(2)-1,2*h)+1);
-%   cs = uint32([1:w w:-1:1]); cs=cs(mod(-p(3):w+p(4)-1,2*w)+1);
-% elseif( strcmp(type,'circular') )
-%   rs = uint32(1:h); rs=rs(mod(-p(1):h+p(2)-1,h)+1);
-%   cs = uint32(1:w); cs=cs(mod(-p(3):w+p(4)-1,w)+1);
-% end
-% J = I(rs,cs,:);
+% MATLAB fallback for newer Windows/MATLAB combinations where the legacy
+% Piotr toolbox MEX either fails to compile cleanly or mis-handles sizes.
+[h,w,~]=size(I); p=pad; k=length(p);
+if(k==1), p=[p p p p]; elseif(k==2), p=[p(1) p(1) p(2) p(2)]; end
+if( length(type)==1 )
+  J=imPad(I,p,'replicate'); v=feval(class(I),type);
+  J(1:p(1),:,:)=v; J(end-p(2)+1:end,:,:)=v;
+  J(:,1:p(3),:)=v; J(:,end-p(4)+1:end,:)=v;
+  return;
+elseif( strcmp(type,'replicate') )
+  rs = [uint32(ones(1,p(1))) 1:h h*ones(1,p(2))];
+  cs = [uint32(ones(1,p(3))) 1:w w*ones(1,p(4))];
+elseif( strcmp(type,'symmetric') )
+  rs = uint32([1:h h:-1:1]); rs=rs(mod(-p(1):h+p(2)-1,2*h)+1);
+  cs = uint32([1:w w:-1:1]); cs=cs(mod(-p(3):w+p(4)-1,2*w)+1);
+elseif( strcmp(type,'circular') )
+  rs = uint32(1:h); rs=rs(mod(-p(1):h+p(2)-1,h)+1);
+  cs = uint32(1:w); cs=cs(mod(-p(3):w+p(4)-1,w)+1);
+end
+J = I(rs,cs,:);

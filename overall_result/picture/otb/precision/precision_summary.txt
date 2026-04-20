@@ -1,0 +1,20 @@
+OTB100 Precision Comparison
+Integrated trackers in this chart: 17
+
+01. MDNet: Precision=90.943761
+02. MyTracker: Precision=90.706630
+03. CCOT: Precision=89.792540
+04. DeepSRDCF: Precision=85.125884
+05. HDT: Precision=84.770914
+06. CF2: Precision=83.711092
+07. SRDCFdecon: Precision=82.542821
+08. ToMP-50: Precision=81.343642
+09. CNN-SVM: Precision=80.888336
+10. SRDCF: Precision=78.949422
+11. Staple: Precision=78.398660
+12. MEEM: Precision=78.123061
+13. LCT: Precision=76.190185
+14. CSRT: Precision=75.208101
+15. SAMF: Precision=75.133911
+16. KCF: Precision=69.566312
+17. DSST: Precision=67.967258

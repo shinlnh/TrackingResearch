@@ -34,7 +34,7 @@
 #include <vector>
 #include <Eigen/Core>
 
-#include <opencv/cv.h>
+#include "opencv_compat.h"
 
 class Config;
 class Features;

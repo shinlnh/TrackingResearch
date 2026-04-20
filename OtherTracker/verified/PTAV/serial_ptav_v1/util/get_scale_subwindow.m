@@ -17,7 +17,15 @@ for s = 1:nScales
     im_patch = im(ys, xs, :);
     
     % resize image to model size
-    im_patch_resized = mexResize(im_patch, scale_model_sz, 'auto');
+    if exist(['mexResize.' mexext], 'file') == 3
+        try
+            im_patch_resized = mexResize(im_patch, scale_model_sz, 'auto');
+        catch
+            im_patch_resized = imresize(im_patch, scale_model_sz, 'bilinear');
+        end
+    else
+        im_patch_resized = imresize(im_patch, scale_model_sz, 'bilinear');
+    end
     
     % extract scale features
     temp_hog = fhog(single(im_patch_resized), 4);

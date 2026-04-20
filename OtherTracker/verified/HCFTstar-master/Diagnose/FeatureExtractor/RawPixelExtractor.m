@@ -48,8 +48,7 @@ for i = 1:size(tmpl, 1)
 
     tempIm = im(round(midH-h/2) : round(midH+h/2),...
                 round(midW-w/2) : round(midW+w/2), :);
-%     tempIm = imresize(tempIm, sz);
-    tempIm = mexResize(tempIm, sz, 'auto');
+    tempIm = resize_compat(tempIm, sz, 'auto');
     features(:, i) = tempIm(:);
     if (norm(features(:, i)) > 1e-6)
         features(:, i) = features(:, i) / norm(features(:, i));

@@ -11,6 +11,9 @@ numLayers = length(indLayers);
 % Get image size and search window size
 im_sz     = size(imread([video_path img_files{1}]));
 window_sz = get_search_window(target_sz, im_sz, padding);% floor(2.5*target_sz);%
+im_hw = im_sz(1:2);
+target_sz = sanitize_size(target_sz, im_hw);
+window_sz = sanitize_size(window_sz, im_hw);
 search_area = prod(target_sz / config.features.cell_size * 2.8);
 cell_selection_thresh = 0.75^2;
 filter_max_area =50^2;
@@ -66,15 +69,28 @@ model_xf     = cell(1, numLayers);
 model_alphaf = cell(1, numLayers);
 app_xf=0;
 app_alphaf=0;
+svm_model = [];
+app_model = struct('xf', [], 'alphaf', []);
 % ================================================================================
 % Start tracking
 % ================================================================================
 for frame = 1:numel(img_files),
+    if frame == 1 || mod(frame,100) == 0 || frame == numel(img_files)
+        fprintf('[hcft] frame %d/%d\n', frame, numel(img_files));
+    end
     im = imread([video_path img_files{frame}]); % Load the image at the current frame
     org_im = im;
     if ismatrix(im)
         im = cat(3, im, im, im);
     end
+    im_hw = size(im);
+    im_hw = im_hw(1:2);
+    pos = sanitize_pos(pos, im_hw);
+    target_sz = sanitize_size(target_sz, im_hw);
+    current_target_sz = sanitize_size(current_target_sz, im_hw);
+    window_sz = sanitize_size(window_sz, im_hw);
+    current_window_sz = sanitize_size(current_window_sz, im_hw);
+    app_sz = sanitize_size(app_sz, im_hw);
     
     tic();
     % ================================================================================
@@ -92,6 +108,7 @@ for frame = 1:numel(img_files),
         response = fftshift(real(ifft2(app_alphaf.*kzf)));
         max_response = max(response(:));
         % motion response
+        current_window_sz = sanitize_size(current_window_sz, im_hw);
         patch = get_subwindow(im, pos, current_window_sz);
         patch = imresize(patch,config.window_sz,'bilinear');
         % Extracting hierarchical convolutional features
@@ -101,35 +118,48 @@ for frame = 1:numel(img_files),
         kzf=gaussian_correlation(zf, scale_model.xf, config.kernel_sigma);
         response = fftshift(real(ifft2(scale_model.alphaf.*kzf)));
         motion_response = max(response(:));
-        if  max_response< config.motion_thresh
+        if  max_response< config.motion_thresh && ~isempty(svm_model) && ~isempty(app_model.xf)
+               window_sz = sanitize_size(window_sz, im_hw);
                patch1 = get_subwindow(im,pos,window_sz); 
                if size(patch1,1)>1&&size(patch1,2)>1
                    opts.minBoxArea= 0.8*target_sz(1)*target_sz(2);
                    opts.maxBoxArea=1.2*target_sz(1)*target_sz(2);
                    opts.maxAspectRatio= 1.5*max(target_sz(1)/target_sz(2),target_sz(2)/target_sz(1));
                    opts.aspectRatio = target_sz(2)/target_sz(1);
-                   bbs= myedgeBoxes(patch1,model,opts);
-                   bbs1 = [bbs(:,1)+bbs(:,3)./2 bbs(:,2)+bbs(:,4)./2  bbs(:,3) bbs(:,4)];
-                   [ind,maxProb] = prorej(single(patch1),bbs1,svm_model);                 
-                   % svm_model.lastProb = maxProb;
-                   num = floor(size(bbs,1)./2);
-                   bbs2 =  bbs(ind(1:num),:);
-                   [pos,~,max_response] = rp_detect(im,pos,window_sz,bbs2,target_sz,app_sz,app_model,config,max_response,current_target_sz,0);
+                   try
+                       bbs = myedgeBoxes(patch1,model,opts);
+                   catch
+                       bbs = zeros(0, 5);
+                   end
+                   if ~isempty(bbs)
+                       bbs1 = [bbs(:,1)+bbs(:,3)./2 bbs(:,2)+bbs(:,4)./2  bbs(:,3) bbs(:,4)];
+                       [ind,maxProb] = prorej(single(patch1),bbs1,svm_model);                 
+                       % svm_model.lastProb = maxProb;
+                       num = floor(size(bbs,1)./2);
+                       if num > 0 && ~isempty(ind)
+                           bbs2 =  bbs(ind(1:num),:);
+                           [pos,~,max_response] = rp_detect(im,pos,window_sz,bbs2,target_sz,app_sz,app_model,config,max_response,current_target_sz,0);
+                       end
+                   end
                end
         else
-            win_sz = floor(1.4*current_target_sz);
+            win_sz = sanitize_size(floor(1.4*current_target_sz), im_hw);
             patch1 = get_subwindow(im,pos,win_sz);
             if size(patch1,3)<2, patch1 = cat(3,patch1,patch1,patch1);   end
             opts1.minBoxArea = 0.3*current_target_sz(1)*current_target_sz(2);                            
             opts1.maxAspectRatio = 1.5*max(current_target_sz(1)/current_target_sz(2), current_target_sz(2)/current_target_sz(1));
-            bbs = edgeBoxes(patch1,model,opts1);
+            try
+                bbs = edgeBoxes(patch1,model,opts1);
+            catch
+                bbs = zeros(0, 5);
+            end
             [ind] = proRej(bbs,win_sz([2,1]), current_target_sz([2,1]));
             if (nonzeros(ind))
                 responind = zeros(numel(nonzeros(ind)),1);
                 for kk=1:numel(nonzeros(ind))
                     bb=bbs(ind(kk),:);
-                    proposal_sz = floor([ratio1 ratio2].*[bb(4) bb(3)]);                  
-                    proposal_loc = floor(pos - win_sz./2+[bb(2) bb(1)]+[bb(4)./2 bb(3)./2]);
+                    proposal_sz = sanitize_size(floor([ratio1 ratio2].*[bb(4) bb(3)]), im_hw);
+                    proposal_loc = sanitize_pos(floor(pos - win_sz./2+[bb(2) bb(1)]+[bb(4)./2 bb(3)./2]), im_hw);
                     patch2 = get_subwindow(im,proposal_loc,proposal_sz);                       
               %patch2 = patch1(bb(2):1:bb(2)+bb(4),bb(1):1:(bb(1)+bb(3)),:);                
                     patch2 = imresize(patch2,config.window_sz);                
@@ -144,9 +174,9 @@ for frame = 1:numel(img_files),
                    bb = bbs(ind(indx),:);      
                     if  bb(4)*bb(3)< 1.2*(prod(current_target_sz)) &&bb(4)*bb(3)>0.7*(prod(current_target_sz))
                       pos2= (pos - win_sz./2)+ [bb(2) bb(1)];
-                      pos3 = pos2 + ([bb(4)./2 bb(3)./2]); % patch3= get_subwindow(im,pos3,window_sz);
+                      pos3 = sanitize_pos(pos2 + ([bb(4)./2 bb(3)./2]), im_hw); % patch3= get_subwindow(im,pos3,window_sz);
                       %pos = pos+floor( 0.1*(pos3-pos));                     
-                      current_target_sz = current_target_sz+(0.6*([bb(4) bb(3)]- current_target_sz));
+                      current_target_sz = sanitize_size(current_target_sz+(0.6*([bb(4) bb(3)]- current_target_sz)), im_hw);
                     end
                 end
            end
@@ -158,7 +188,7 @@ for frame = 1:numel(img_files),
     % Learning correlation filters over hierarchical convolutional features
     % ================================================================================
     % Extracting hierarchical convolutional features
-    current_window_sz= current_target_sz.*[ratio1 ratio2]; % for scale estimation
+    current_window_sz= sanitize_size(current_target_sz.*[ratio1 ratio2], im_hw); % for scale estimation
     patch = get_subwindow((org_im), pos, current_window_sz);
     patch = imresize(patch,config.window_sz);
     sxf = fft2(get_hog_features(patch, config,cos_window)); %feat  = get_hog_features(patch, config,cos_window);
@@ -169,14 +199,21 @@ for frame = 1:numel(img_files),
       alphaf_num = new_alphaf_num;
       alphaf_den = new_alphaf_den;  
       scale_model.xf = sxf;
-      svm_model = online_svm_train(im,pos,window_sz,target_sz,opts,model); 
+      try
+          svm_model = online_svm_train(im,pos,window_sz,target_sz,opts,model); 
+      catch
+          svm_model = [];
+      end
     else
         scale_model.xf = (1 - interp_factor) * scale_model.xf + interp_factor * sxf; 
         alphaf_num = (1 - interp_factor) * alphaf_num + interp_factor * new_alphaf_num;
         alphaf_den = (1 - interp_factor) * alphaf_den + interp_factor * new_alphaf_den; 
             
-         if max_response>config.appearance_thresh %0.38
-            svm_model = online_svm_update(im,pos,window_sz,target_sz,opts,model,svm_model);
+         if max_response>config.appearance_thresh && ~isempty(svm_model) %0.38
+            try
+                svm_model = online_svm_update(im,pos,window_sz,target_sz,opts,model,svm_model);
+            catch
+            end
          end    
     end
      scale_model.alphaf = alphaf_num./alphaf_den; 
@@ -206,6 +243,34 @@ for frame = 1:numel(img_files),
         drawnow
         % 			pause(0.05)  % uncomment to run slower
     end
+end
+
+function sz = sanitize_size(sz, im_hw)
+sz = double(sz(:)');
+if numel(sz) == 1
+    sz = [sz sz];
+end
+if numel(sz) < 2
+    sz = [2 2];
+end
+if any(~isfinite(sz))
+    sz = max([2 2], floor(im_hw ./ 4));
+end
+sz = abs(sz);
+sz = round(sz);
+sz = max(sz, [2 2]);
+cap = max([2 2], min(double(im_hw), [2048 2048]));
+sz = min(sz, cap);
+end
+
+function pos = sanitize_pos(pos, im_hw)
+pos = double(pos(:)');
+if numel(pos) < 2 || any(~isfinite(pos))
+    pos = floor(double(im_hw([1 2])) ./ 2);
+    return;
+end
+pos(1) = min(max(pos(1), 1), im_hw(1));
+pos(2) = min(max(pos(2), 1), im_hw(2));
 end
 
 end

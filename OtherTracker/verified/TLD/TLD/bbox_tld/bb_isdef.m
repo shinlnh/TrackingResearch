@@ -19,4 +19,11 @@
 function id = bb_isdef(bb)
 % Info
 
-id = isfinite(bb(1,:));
+if isempty(bb) || size(bb,1) < 4
+    id = false(1, max(1, size(bb, 2)));
+    return;
+end
+
+id = all(isfinite(bb(1:4,:)), 1) & ...
+    bb(3,:) >= bb(1,:) & ...
+    bb(4,:) >= bb(2,:);

@@ -34,7 +34,7 @@
 #include "Rect.h"
 #include "GraphUtils/GraphUtils.h"
 
-#include <opencv/highgui.h>
+#include "opencv_compat.h"
 static const int kTileSize = 30;
 using namespace cv;
 
@@ -541,7 +541,7 @@ void LaRank::UpdateDebugImage()
 	
 	Mat I = m_debugImage(cv::Rect(0, m_debugImage.rows - 200, m_debugImage.cols-kernelSize, 200));
 	I.setTo(Scalar(255,255,255));
-	IplImage II = I;
+	IplImage II = cvIplImage(I);
 	setGraphColor(0);
 	drawFloatGraph(vals, n, &II, 0.f, 0.f, I.cols, I.rows);
 }

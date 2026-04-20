@@ -1,0 +1,48 @@
+LaSOT all-tracker FPS report
+Metric: FPS_final_weighted_by_frames = total_frames / total_time_sec
+Integrated trackers in this chart: 43
+Notes: HCFT uses summary_full40_check.csv. PTAV uses its accepted 15-sequence representative subset.
+
+01. CSK: valid_sequences=40, FPS_final=714538.331740, FPS_avg_seq=1726543.957287
+02. ECO_HC: valid_sequences=40, FPS_final=132533.067808, FPS_avg_seq=155903.131282
+03. SCT4: valid_sequences=40, FPS_final=100401.144755, FPS_avg_seq=249004.941272
+04. CN: valid_sequences=40, FPS_final=94970.173058, FPS_avg_seq=577591.845980
+05. L1APG: valid_sequences=40, FPS_final=81609.086326, FPS_avg_seq=90816.362110
+06. TRACA: valid_sequences=40, FPS_final=41287.798388, FPS_avg_seq=117508.241423
+07. BACF: valid_sequences=40, FPS_final=40614.710649, FPS_avg_seq=45595.023532
+08. TLD: valid_sequences=40, FPS_final=18655.947493, FPS_avg_seq=103270.053618
+09. fDSST: valid_sequences=40, FPS_final=8182.199059, FPS_avg_seq=8755.406418
+10. Staple_CA: valid_sequences=40, FPS_final=4594.269747, FPS_avg_seq=4593.686772
+11. HCFT: valid_sequences=40, FPS_final=2586.669961, FPS_avg_seq=13493.003133
+12. KCF: valid_sequences=40, FPS_final=98.679592, FPS_avg_seq=1119.692223
+13. DeepSRDCF: valid_sequences=40, FPS_final=81.238324, FPS_avg_seq=83.118480
+14. MyTracker: valid_sequences=40, FPS_final=75.028668, FPS_avg_seq=74.792824
+15. CT: valid_sequences=40, FPS_final=74.829602, FPS_avg_seq=111.545996
+16. STC: valid_sequences=40, FPS_final=73.039981, FPS_avg_seq=215.886118
+17. CSRT: valid_sequences=40, FPS_final=65.698879, FPS_avg_seq=112.177898
+18. ECO: valid_sequences=40, FPS_final=61.310790, FPS_avg_seq=62.981653
+19. IVT: valid_sequences=40, FPS_final=57.515333, FPS_avg_seq=58.835424
+20. SiamFC: valid_sequences=40, FPS_final=47.260718, FPS_avg_seq=51.272736
+21. Struck: valid_sequences=40, FPS_final=42.571344, FPS_avg_seq=43.465724
+22. StructSiam: valid_sequences=40, FPS_final=39.201603, FPS_avg_seq=44.873063
+23. CFNet: valid_sequences=40, FPS_final=28.737555, FPS_avg_seq=51.471830
+24. ToMP: valid_sequences=40, FPS_final=22.870803, FPS_avg_seq=23.062063
+25. Staple: valid_sequences=40, FPS_final=20.796128, FPS_avg_seq=74.714977
+26. MIL: valid_sequences=40, FPS_final=15.982618, FPS_avg_seq=17.397164
+27. CSRDCF: valid_sequences=40, FPS_final=13.493506, FPS_avg_seq=23.439504
+28. CNN-SVM: valid_sequences=40, FPS_final=12.880076, FPS_avg_seq=12.905843
+29. DSiam: valid_sequences=40, FPS_final=12.436227, FPS_avg_seq=21.578323
+30. MEEM: valid_sequences=40, FPS_final=11.610667, FPS_avg_seq=12.859435
+31. STRCF: valid_sequences=40, FPS_final=11.340134, FPS_avg_seq=12.269507
+32. SAMF: valid_sequences=40, FPS_final=8.842495, FPS_avg_seq=20.144997
+33. SRDCF: valid_sequences=40, FPS_final=7.873938, FPS_avg_seq=13.013567
+34. LCT: valid_sequences=40, FPS_final=7.043583, FPS_avg_seq=21.238700
+35. MDNet: valid_sequences=40, FPS_final=6.523792, FPS_avg_seq=6.587699
+36. DSST: valid_sequences=40, FPS_final=4.893721, FPS_avg_seq=90.749543
+37. ASLA: valid_sequences=40, FPS_final=4.218745, FPS_avg_seq=4.272318
+38. CF2: valid_sequences=40, FPS_final=2.722565, FPS_avg_seq=16.168986
+39. VITAL: valid_sequences=40, FPS_final=2.465822, FPS_avg_seq=2.599929
+40. SRDCFdecon: valid_sequences=40, FPS_final=1.976791, FPS_avg_seq=2.718301
+41. PTAV: valid_sequences=15, FPS_final=0.982637, FPS_avg_seq=1.413483
+42. HDT: valid_sequences=40, FPS_final=0.977990, FPS_avg_seq=2.025625
+43. SINT: valid_sequences=40, FPS_final=0.920949, FPS_avg_seq=1.008812

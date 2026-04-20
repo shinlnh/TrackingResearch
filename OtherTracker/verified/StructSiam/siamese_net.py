@@ -1,4 +1,5 @@
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 from tensorflow.python.ops import control_flow_ops
 from tensorflow.python.training import moving_averages
 
@@ -178,13 +179,13 @@ class SiameseNet:
             # outputs = conv1(outputs, 256, 384, 3, 1)
             #outputs_p = tf.reshape(outputs,(int(outputs.get_shape()[0]),int(outputs.get_shape()[1]*outputs.get_shape()[2]),int(outputs.get_shape()[3])))
             #outputs_p = tf.nn.softmax(outputs_p, dim=1)
-            outputs_p = tf.nn.softmax(outputs,dim=3)
-	    outputs_p = outputs_p * float(int(outputs.get_shape()[3]))
+            outputs_p = tf.nn.softmax(outputs, axis=3)
+            outputs_p = outputs_p * float(int(outputs.get_shape()[3]))
             #outputs_p = tf.reshape(outputs_p,outputs.get_shape())
             outputs_p = self.conv(outputs_p,384, 3, 1, 1, [1.0, 2.0], [1.0, 0.0], opts['trainWeightDecay'], opts['stddev'],name='crf_conv_p1',padding='SAME')
 
             #outputs_p = tf.reshape(outputs_p,(int(outputs.get_shape()[0]),int(outputs.get_shape()[1]*outputs.get_shape()[2]),384))
-            outputs_p = tf.nn.softmax(outputs_p, dim=3)
+            outputs_p = tf.nn.softmax(outputs_p, axis=3)
             outputs_p = outputs_p * float(int(outputs.get_shape()[3]))
             #outputs_p = tf.reshape(outputs_p,(int(outputs.get_shape()[0]),int(outputs.get_shape()[1]),int(outputs.get_shape()[2]),384))
             outputs_p = self.conv(outputs_p,384, 3, 1, 1, [1.0, 2.0], [1.0, 0.0], opts['trainWeightDecay'], opts['stddev'],name='crf_conv_p2')
@@ -200,7 +201,7 @@ class SiameseNet:
             #outputs_p = tf.reshape(outputs_p, (
             #int(outputs.get_shape()[0]), int(outputs.get_shape()[1] * outputs.get_shape()[2]),
             #int(outputs.get_shape()[3])))
-            outputs_p = tf.nn.softmax(outputs_p, dim=3)
+            outputs_p = tf.nn.softmax(outputs_p, axis=3)
             outputs_p = outputs_p * float(int(outputs.get_shape()[3]))
             #outputs_p = tf.reshape(outputs_p, outputs.get_shape())
             outputs_p_ = self.conv(outputs_p, 384, 1, 1, 1, [1.0, 2.0], [1.0, 0.0], opts['trainWeightDecay'],
@@ -212,7 +213,7 @@ class SiameseNet:
             outputs_p = self.conv(outputs_p_,384, 3, 1, 2, [1.0, 2.0], [1.0, 0.0], opts['trainWeightDecay'], opts['stddev'],name='crf_conv_p1',padding='SAME')
 
             #outputs_p = tf.reshape(outputs_p,(int(outputs.get_shape()[0]),int(outputs.get_shape()[1]*outputs.get_shape()[2]),int(outputs.get_shape()[3])))
-            outputs_p = tf.nn.softmax(outputs_p, dim=3)
+            outputs_p = tf.nn.softmax(outputs_p, axis=3)
             outputs_p = outputs_p * float(int(outputs.get_shape()[3]))
             #outputs_p = tf.reshape(outputs_p,outputs.get_shape())
 
@@ -232,7 +233,7 @@ class SiameseNet:
             #outputs_p = tf.reshape(outputs_p, (
             #int(outputs.get_shape()[0]), int(outputs.get_shape()[1] * outputs.get_shape()[2]),
             #int(outputs.get_shape()[3])))
-            outputs_p = tf.nn.softmax(outputs_p, dim=3)
+            outputs_p = tf.nn.softmax(outputs_p, axis=3)
             outputs_p = outputs_p * float(int(outputs.get_shape()[3] ))
             #outputs_p = tf.reshape(outputs_p, outputs.get_shape())
             outputs_p_ = self.conv(outputs_p, 384, 1, 1, 2, [1.0, 2.0], [1.0, 0.0], opts['trainWeightDecay'],
@@ -247,7 +248,7 @@ class SiameseNet:
             #outputs_p = tf.reshape(outputs_p, (
             #int(outputs.get_shape()[0]), int(outputs.get_shape()[1] * outputs.get_shape()[2]),
             #256))
-            outputs_p = tf.nn.softmax(outputs_p, dim=3)
+            outputs_p = tf.nn.softmax(outputs_p, axis=3)
             outputs_p = outputs_p * float(int(outputs.get_shape()[3]))
             #outputs_p = tf.reshape(outputs_p, (int(outputs.get_shape()[0]), int(outputs.get_shape()[1]),int(outputs.get_shape()[2]),256))
 
@@ -265,7 +266,7 @@ class SiameseNet:
             #outputs_p = tf.reshape(outputs_p, (
             #    int(outputs.get_shape()[0]), int(outputs.get_shape()[1] * outputs.get_shape()[2]),
             #    int(outputs.get_shape()[3])))
-            outputs_p = tf.nn.softmax(outputs_p, dim=3)
+            outputs_p = tf.nn.softmax(outputs_p, axis=3)
             outputs_p = outputs_p * float(int(outputs.get_shape()[3]))
             #outputs_p = tf.reshape(outputs_p, outputs.get_shape())
             outputs_p_ = self.conv(outputs_p, 256, 1, 1, 2, [1.0, 2.0], [1.0, 0.0], opts['trainWeightDecay'],
@@ -284,13 +285,13 @@ class SiameseNet:
 
         if name is not None:
             with tf.variable_scope(name):
-                weights = self.getVariable('weights', shape=[size, size, channels / groups, filters], initializer=tf.truncated_normal_initializer(stddev=stddev), weightDecay=wds[0]*wd, dType=tf.float32, trainable=True)
+                weights = self.getVariable('weights', shape=[size, size, channels // groups, filters], initializer=tf.truncated_normal_initializer(stddev=stddev), weightDecay=wds[0]*wd, dType=tf.float32, trainable=True)
                 # tf.get_variable('weights', shape=[size, size, channels/groups, filters], initializer=tf.contrib.layers.xavier_initializer(), dtype=tf.float32) ,
                 biases = self.getVariable('biases', shape=[filters, ], initializer=tf.constant_initializer(value=0.1, dtype=tf.float32), weightDecay=wds[1]*wd, dType=tf.float32, trainable=True)
                 # tf.get_variable('biases', [filters,], initializer=tf.constant_initializer(value=0.1, dtype=tf.float32))
         else:
             with tf.variable_scope('conv'):
-                weights = self.getVariable('weights', shape=[size, size, channels / groups, filters], initializer=tf.truncated_normal_initializer(stddev=stddev), weightDecay=wds[0]*wd, dType=tf.float32, trainable=True)
+                weights = self.getVariable('weights', shape=[size, size, channels // groups, filters], initializer=tf.truncated_normal_initializer(stddev=stddev), weightDecay=wds[0]*wd, dType=tf.float32, trainable=True)
                 # tf.get_variable('weights', shape=[size, size, channels/groups, filters], initializer=tf.contrib.layers.xavier_initializer(), dtype=tf.float32) ,
                 biases = self.getVariable('biases', shape=[filters, ], initializer=tf.constant_initializer(value=0.1, dtype=tf.float32), weightDecay=wds[1]*wd, dType=tf.float32, trainable=True)
                 # tf.get_variable('biases', [filters,], initializer=tf.constant_initializer(value=0.1, dtype=tf.float32))
@@ -361,7 +362,7 @@ class SiameseNet:
     def loss(self, score, y, weights):
         a = -tf.multiply(score, y)
         b = tf.nn.relu(a)
-        loss = b+tf.log(tf.exp(-b)+tf.exp(a-b))
+        loss = b + tf.math.log(tf.exp(-b) + tf.exp(a-b))
         # loss = tf.log(1+tf.exp(a))
         # loss = tf.reduce_mean(loss)
         loss = tf.reduce_mean(tf.multiply(weights, loss))
@@ -372,7 +373,7 @@ class SiameseNet:
 
     def getVariable(self, name, shape, initializer, weightDecay = 0.0, dType=tf.float32, trainable = True):
         if weightDecay > 0:
-            regularizer = tf.contrib.layers.l2_regularizer(weightDecay)
+            regularizer = tf.keras.regularizers.l2(weightDecay)
         else:
             regularizer = None
 
@@ -383,7 +384,7 @@ def conv1(inputs, channels, filters, size, stride):
     # initializations include trancated norm distribution method and xavier method, the matlab version exploits an improved xavier method.
     # However I didn't find it in tf, so xavier is used here, if not work, something may need change here!!
     weights = tf.get_variable('weights', [size, size, channels, filters],
-                              initializer=tf.contrib.layers.xavier_initializer(), dtype=tf.float32)
+                              initializer=tf.keras.initializers.GlorotUniform(), dtype=tf.float32)
     biases = tf.get_variable('biases', [filters, ],
                              initializer=tf.constant_initializer(value=0.1, dtype=tf.float32))
 
@@ -401,10 +402,10 @@ def conv2(inputs, channels, filters, size, stride):
     inputs0 = tf.slice(inputs, [0, 0, 0, 0], [inputShape[0], inputShape[1], inputShape[2], channels])
     inputs1 = tf.slice(inputs, [0, 0, 0, channels], [inputShape[0], inputShape[1], inputShape[2], channels])
 
-    weights0 = tf.get_variable('weights0', [size, size, channels, filters / 2],
-                               initializer=tf.contrib.layers.xavier_initializer_conv2d(), dtype=tf.float32)
-    weights1 = tf.get_variable('weights1', [size, size, channels, filters / 2],
-                               initializer=tf.contrib.layers.xavier_initializer_conv2d(), dtype=tf.float32)
+    weights0 = tf.get_variable('weights0', [size, size, channels, filters // 2],
+                               initializer=tf.keras.initializers.GlorotUniform(), dtype=tf.float32)
+    weights1 = tf.get_variable('weights1', [size, size, channels, filters // 2],
+                               initializer=tf.keras.initializers.GlorotUniform(), dtype=tf.float32)
 
     conv0 = tf.nn.conv2d(inputs0, weights0, strides=[1, stride, stride, 1])
     conv1 = tf.nn.conv2d(inputs1, weights1, strides=[1, stride, stride, 1])

@@ -23,6 +23,10 @@ function [img_files, pos, target_sz, ground_truth, video_path] = load_video_info
 	%try to load ground truth from text file (Benchmark's format)
 	filename = [video_path 'groundtruth_rect.txt'];
 	f = fopen(filename);
+	if f == -1
+		filename = [video_path 'groundtruth.txt'];
+		f = fopen(filename);
+	end
 	assert(f ~= -1, ['No initial position or ground truth to load ("' filename '").'])
 	
 	%the format is [x, y, width, height]
@@ -86,4 +90,3 @@ function [img_files, pos, target_sz, ground_truth, video_path] = load_video_info
 	end
 	
 end
-

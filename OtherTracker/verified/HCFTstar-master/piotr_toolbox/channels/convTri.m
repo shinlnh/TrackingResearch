@@ -81,12 +81,18 @@ if( isempty(I) || (r==0 && s==1) ), J = I; return; end
 m=min(size(I,1),size(I,2)); if( m<4 || 2*r+1>=m ), nomex=1; end
 
 if( nomex==0 )
-  if( r>0 && r<=1 && s<=2 )
-    J = convConst('convTri1',I,12/r/(r+2)-2,s);
-  else
-    J = convConst('convTri',I,r,s);
+  try
+    if( r>0 && r<=1 && s<=2 )
+      J = convConst('convTri1',I,12/r/(r+2)-2,s);
+    else
+      J = convConst('convTri',I,r,s);
+    end
+  catch
+    nomex = 1;
   end
-else
+end
+
+if( nomex~=0 )
   if(r<=1), p=12/r/(r+2)-2; f=[1 p 1]/(2+p); r=1;
   else f=[1:r r+1 r:-1:1]/(r+1)^2; end
   J = padarray(I,[r r],'symmetric','both');

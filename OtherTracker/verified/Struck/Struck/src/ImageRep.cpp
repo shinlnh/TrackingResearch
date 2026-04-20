@@ -29,7 +29,7 @@
 
 #include <cassert>
 
-#include <opencv/highgui.h>
+#include "opencv_compat.h"
 
 using namespace std;
 using namespace cv;
