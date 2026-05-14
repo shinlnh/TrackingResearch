@@ -19,10 +19,10 @@ class LaSOTDataset(BaseDataset):
 
     Download the dataset from https://cis.temple.edu/lasot/download.html
     """
-    def __init__(self, vos_mode=False, attribute=None):
+    def __init__(self, vos_mode=False, attribute=None, sequence_list=None):
         super().__init__()
         self.base_path = self.env_settings.lasot_path
-        self.sequence_list = self._get_sequence_list()
+        self.sequence_list = list(sequence_list) if sequence_list is not None else self._get_sequence_list()
         self.clean_list = self.clean_seq_list()
         self.att_dict = None
 

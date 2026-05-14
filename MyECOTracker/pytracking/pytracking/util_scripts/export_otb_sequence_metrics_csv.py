@@ -8,12 +8,46 @@ import torch
 from pytracking.analysis.extract_results import extract_results
 from pytracking.evaluation.environment import env_settings
 from pytracking.evaluation import Tracker, get_dataset
+from pytracking.evaluation.lasotdataset import LaSOTDataset
 
 
 SUCCESS50_INDEX = 10
 SUCCESS75_INDEX = 15
 PRECISION_INDEX = 20
 NORM_PRECISION_INDEX = 20
+
+
+def load_sequence_names(path):
+    if path is None:
+        return None
+    return [line.strip() for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+
+
+def filter_dataset(dataset, sequence_names):
+    if not sequence_names:
+        return list(dataset)
+
+    by_name = {seq.name: seq for seq in dataset}
+    filtered = []
+    missing = []
+
+    for name in sequence_names:
+        seq = by_name.get(name)
+        if seq is None:
+            missing.append(name)
+        else:
+            filtered.append(seq)
+
+    if missing:
+        raise ValueError("Unknown sequences for dataset filter: {}".format(", ".join(missing)))
+
+    return filtered
+
+
+def load_dataset(dataset_name, sequence_names):
+    if dataset_name == "lasot" and sequence_names:
+        return LaSOTDataset(sequence_list=sequence_names).get_sequence_list()
+    return filter_dataset(get_dataset(dataset_name), sequence_names)
 
 
 def read_time_stats(tracker_results_dir, seq_name):
@@ -63,7 +97,7 @@ def build_rows(dataset, eval_data, tracker_results_dir):
     return rows, missing_sequences
 
 
-def compute_summary(rows, eval_data, tracker_name, parameter_name, run_id, missing_sequences):
+def compute_summary(rows, eval_data, tracker_name, parameter_name, run_id, dataset_label, missing_sequences):
     valid = torch.tensor(eval_data["valid_sequence"], dtype=torch.bool)
     success_overlap = torch.tensor(eval_data["ave_success_rate_plot_overlap"], dtype=torch.float64)[valid].mean(0) * 100.0
     precision_curve = torch.tensor(eval_data["ave_success_rate_plot_center"], dtype=torch.float64)[valid].mean(0) * 100.0
@@ -78,7 +112,7 @@ def compute_summary(rows, eval_data, tracker_name, parameter_name, run_id, missi
 
     summary = {
         "tracker": "{}_{}_{}".format(tracker_name, parameter_name, run_id),
-        "dataset": "OTB100",
+        "dataset": dataset_label,
         "valid_sequences": "{}/{}".format(len(rows), len(rows) + len(missing_sequences)),
         "missing_sequences": ", ".join(missing_sequences),
         "AUC_mean": float(auc_values.mean()) if len(rows) > 0 else float("nan"),
@@ -112,28 +146,42 @@ def compute_eval_data(tracker, dataset, report_name):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Export OTB per-sequence metrics to CSV.")
+    parser = argparse.ArgumentParser(description="Export per-sequence tracking metrics to CSV.")
     parser.add_argument("--tracker-name", required=True)
     parser.add_argument("--parameter-name", required=True)
     parser.add_argument("--run-id", type=int, required=True)
     parser.add_argument("--dataset-name", default="otb")
+    parser.add_argument("--sequence-file", type=Path)
+    parser.add_argument("--dataset-label", default="")
     parser.add_argument("--rows-csv", type=Path, required=True)
     parser.add_argument("--summary-csv", type=Path, required=True)
     parser.add_argument("--report-name", default="")
     args = parser.parse_args()
 
-    dataset = get_dataset(args.dataset_name)
+    sequence_names = load_sequence_names(args.sequence_file)
+    dataset = load_dataset(args.dataset_name, sequence_names)
     tracker = Tracker(args.tracker_name, args.parameter_name, args.run_id)
+    dataset_label = args.dataset_label if args.dataset_label else (
+        args.sequence_file.stem if args.sequence_file is not None else args.dataset_name
+    )
     report_name = (
         args.report_name
         if args.report_name
-        else "{}_{}_{}_{}".format(args.dataset_name, args.tracker_name, args.parameter_name, args.run_id)
+        else "{}_{}_{}_{}".format(dataset_label, args.tracker_name, args.parameter_name, args.run_id)
     )
 
     eval_data = compute_eval_data(tracker, dataset, report_name)
 
     rows, missing_sequences = build_rows(dataset, eval_data, Path(tracker.results_dir))
-    summary = compute_summary(rows, eval_data, args.tracker_name, args.parameter_name, args.run_id, missing_sequences)
+    summary = compute_summary(
+        rows,
+        eval_data,
+        args.tracker_name,
+        args.parameter_name,
+        args.run_id,
+        dataset_label,
+        missing_sequences,
+    )
 
     row_fields = [
         "sequence_index",

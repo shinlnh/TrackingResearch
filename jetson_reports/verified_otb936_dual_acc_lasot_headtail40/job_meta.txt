@@ -1,0 +1,13 @@
+[lasot-headtail40] report_dir=/home/helios/HELIOS/MyECOTracker/jetson/reports/verified_otb936_dual_acc_lasot_headtail40
+[lasot-headtail40] results_dir=/home/helios/HELIOS/MyECOTracker/pytracking/pytracking/tracking_results/eco/verified_otb936_run_update_954
+[lasot-headtail40] tracker_name=eco
+[lasot-headtail40] parameter_name=verified_otb936_run_update
+[lasot-headtail40] run_id=954
+[lasot-headtail40] dataset_name=lasot
+[lasot-headtail40] dataset_label=lasot_headtail40
+[lasot-headtail40] sequence_file=/home/helios/HELIOS/MyECOTracker/jetson/lasot_headtail40_sequences.txt
+[lasot-headtail40] run_mode=lasot_headtail40_run_update
+[lasot-headtail40] started_at=2026-04-20 10:12:37
+[lasot-headtail40] finished_at=2026-04-20 12:02:11
+[lasot-headtail40] rows_csv=/home/helios/HELIOS/MyECOTracker/jetson/reports/verified_otb936_dual_acc_lasot_headtail40/per_sequence_metrics.csv
+[lasot-headtail40] summary_csv=/home/helios/HELIOS/MyECOTracker/jetson/reports/verified_otb936_dual_acc_lasot_headtail40/summary.csv
