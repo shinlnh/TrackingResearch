@@ -1,0 +1,4 @@
+challenge_code,sequence,frames,mytracker_mean_fps_seq_pc,csrt_mean_fps_seq,delta_fps_my_minus_csrt,mytracker_dataset_fps_pc,csrt_dataset_fps,mytracker_time_file,csrt_time_file
+OCC,Bolt,350,88.91332718953716,111.24684853580428,-22.33352134626712,63.43,92.98,MyECOTracker\pytracking\pytracking\tracking_results\eco\verified_otb936_936\Bolt_time.txt,OtherTracker\CSRT\otb100_results_full_20260326\txt_results\CSRT\Bolt_time.txt
+IV,Human8,128,88.65896092826887,75.53166155392634,13.127299374342527,63.43,92.98,MyECOTracker\pytracking\pytracking\tracking_results\eco\verified_otb936_936\Human8_time.txt,OtherTracker\CSRT\otb100_results_full_20260326\txt_results\CSRT\Human8_time.txt
+FM,BlurCar3,357,92.94593965530638,72.95451503203003,19.991424623276345,63.43,92.98,MyECOTracker\pytracking\pytracking\tracking_results\eco\verified_otb936_936\BlurCar3_time.txt,OtherTracker\CSRT\otb100_results_full_20260326\txt_results\CSRT\BlurCar3_time.txt

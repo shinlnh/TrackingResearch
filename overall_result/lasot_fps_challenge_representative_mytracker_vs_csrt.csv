@@ -1,0 +1,4 @@
+challenge_code,sequence,frames,mytracker_mean_fps_seq_pc,csrt_mean_fps_seq,delta_fps_my_minus_csrt,mytracker_dataset_fps_pc,csrt_dataset_fps,mytracker_time_file,csrt_time_file
+POC/FOC,basketball-7,2101,112.38354808505387,213.93560544070604,-101.55205735565217,74.79,112.18,MyECOTracker\pytracking\pytracking\tracking_results\eco\verified_otb936_936\basketball-7_time.txt,OtherTracker\lasot\lasot936\CSRT\tracking_results\CSRT\basketball-7_time.txt
+IV,shark-5,1510,84.88541223920646,186.55622700668033,-101.67081476747387,74.79,112.18,MyECOTracker\pytracking\pytracking\tracking_results\eco\verified_otb936_936\shark-5_time.txt,OtherTracker\lasot\lasot936\CSRT\tracking_results\CSRT\shark-5_time.txt
+FM,airplane-13,2971,87.93622122958718,117.57218338214754,-29.635962152560367,74.79,112.18,MyECOTracker\pytracking\pytracking\tracking_results\eco\verified_otb936_936\airplane-13_time.txt,OtherTracker\lasot\lasot936\CSRT\tracking_results\CSRT\airplane-13_time.txt

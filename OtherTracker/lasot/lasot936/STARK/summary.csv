@@ -1,0 +1,2 @@
+tracker,scope,valid_sequences,AUC,Precision,Success50,FPS_avg_seq,FPS_median_seq,FPS_weighted_by_frames,total_frames,total_time_sec
+STARK-ST101,headtail40,40,64.65551122003619,72.05047634347058,74.15566644751301,43.76070945303408,45.50022367860886,41.03501544879275,99468,2423.978617094108

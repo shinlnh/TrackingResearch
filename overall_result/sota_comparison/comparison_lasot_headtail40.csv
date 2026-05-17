@@ -1,0 +1,5 @@
+Tracker,AUC,Precision,Success50,FPS_avg_seq,FPS_weighted_by_frames,valid_sequences,source
+MyECOTracker,22.88,26.44,17.59,19.71,19.69,40,jetson_reports\verified_otb936_dual_acc_lasot_headtail40\summary.csv
+ToMP-50,61.59,68.00,72.17,23.06,22.87,40,OtherTracker\lasot\lasot936\ToMP\summary.csv
+OSTrack-384,71.12,78.71,81.81,31.01,29.73,40,OtherTracker\lasot\lasot936\OSTrack\summary.csv
+STARK-ST101,64.66,72.05,74.16,43.76,41.04,40,OtherTracker\lasot\lasot936\STARK\summary.csv

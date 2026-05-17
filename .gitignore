@@ -89,3 +89,12 @@ tmp_test.mat
 /runs/
 /datatest/
 /_tmp_*
+
+# Claude Code local state
+.claude/
+
+# Cloned SOTA tracker source + heavy checkpoints (kept outside the repo)
+/OtherTracker/OSTrack/
+/OtherTracker/Stark/
+/OtherTracker/SwinTrack/
+/OtherTracker/lasot/lasot936/OSTrack_smoke/
