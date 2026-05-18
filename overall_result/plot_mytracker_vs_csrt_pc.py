@@ -39,7 +39,7 @@ class DatasetSpec:
 
 
 OTB_SPEC = DatasetSpec(
-    title="MyTracker vs Pure CSRT on Representative OTB Challenge Sequences",
+    title="CA-CSRT vs Pure CSRT on Representative OTB Challenge Sequences",
     out_stem="challenge_representative_mytracker_vs_csrt",
     dataset_type="otb",
     my_result_dir=REPO_ROOT
@@ -79,7 +79,7 @@ OTB_SPEC = DatasetSpec(
 
 
 LASOT_SPEC = DatasetSpec(
-    title="MyTracker vs Pure CSRT on Representative LaSOT Challenge Sequences",
+    title="CA-CSRT vs Pure CSRT on Representative LaSOT Challenge Sequences",
     out_stem="lasot_challenge_representative_mytracker_vs_csrt",
     dataset_type="lasot",
     my_result_dir=REPO_ROOT
@@ -226,7 +226,7 @@ def render_dataset(spec: DatasetSpec) -> None:
         delta = my_auc - csrt_auc
 
         ax_iou = axes[row_idx, 0]
-        ax_iou.plot(np.arange(1, len(my_iou) + 1), my_iou, color="#1f77b4", linewidth=0.9, label="MyTracker")
+        ax_iou.plot(np.arange(1, len(my_iou) + 1), my_iou, color="#1f77b4", linewidth=0.9, label="CA-CSRT")
         ax_iou.plot(np.arange(1, len(csrt_iou) + 1), csrt_iou, color="#ff7f0e", linewidth=0.9, label="Pure CSRT")
         ax_iou.set_xlim(1, max(len(my_iou), len(csrt_iou)))
         ax_iou.set_ylim(0, 100)
@@ -236,7 +236,7 @@ def render_dataset(spec: DatasetSpec) -> None:
         ax_iou.tick_params(labelsize=7)
         ax_iou.set_title(
             f"{seq_spec['title']} - {sequence}\n"
-            f"AUC: MyTracker {my_auc:.1f} | CSRT {csrt_auc:.1f} | Delta {delta:+.1f}",
+            f"AUC: CA-CSRT {my_auc:.1f} | CSRT {csrt_auc:.1f} | Delta {delta:+.1f}",
             fontsize=9,
             pad=6,
         )
@@ -245,7 +245,7 @@ def render_dataset(spec: DatasetSpec) -> None:
         ax_traj = axes[row_idx, 1]
         ax_traj.imshow(Image.open(image_path))
         for bbox, color, label in (
-            (my_bbox, "#1f77b4", "MyTracker trajectory"),
+            (my_bbox, "#1f77b4", "CA-CSRT trajectory"),
             (csrt_bbox, "#ff7f0e", "Pure CSRT trajectory"),
         ):
             center_x = bbox[:, 0] + bbox[:, 2] / 2.0

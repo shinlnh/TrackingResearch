@@ -48,7 +48,7 @@ class DatasetSpec:
 
 
 OTB_SPEC = DatasetSpec(
-    title="MyTracker vs Pure CSRT FPS on Representative OTB Challenge Sequences (PC)",
+    title="CA-CSRT vs Pure CSRT FPS on Representative OTB Challenge Sequences (PC)",
     out_stem="fps_challenge_representative_mytracker_vs_csrt",
     csrt_time_dir=REPO_ROOT
     / "OtherTracker"
@@ -67,7 +67,7 @@ OTB_SPEC = DatasetSpec(
 
 
 LASOT_SPEC = DatasetSpec(
-    title="MyTracker vs Pure CSRT FPS on Representative LaSOT Challenge Sequences (PC)",
+    title="CA-CSRT vs Pure CSRT FPS on Representative LaSOT Challenge Sequences (PC)",
     out_stem="lasot_fps_challenge_representative_mytracker_vs_csrt",
     csrt_time_dir=REPO_ROOT
     / "OtherTracker"
@@ -155,10 +155,10 @@ def render_dataset(spec: DatasetSpec) -> None:
         ax_line = axes[row_idx, 0]
         frame_axis_my = np.arange(2, len(my_fps) + 1)
         frame_axis_csrt = np.arange(2, len(csrt_fps) + 1)
-        ax_line.plot(frame_axis_my, my_fps[1:], color=MY_COLOR, linewidth=0.7, label="MyTracker")
+        ax_line.plot(frame_axis_my, my_fps[1:], color=MY_COLOR, linewidth=0.7, label="CA-CSRT")
         ax_line.plot(frame_axis_csrt, csrt_fps[1:], color=CSRT_COLOR, linewidth=0.7, label="Pure CSRT")
         ax_line.axhline(my_mean, color=MY_COLOR, linestyle="--", linewidth=1.0, alpha=0.85,
-                        label=f"MyTracker mean ({my_mean:.1f})")
+                        label=f"CA-CSRT mean ({my_mean:.1f})")
         ax_line.axhline(csrt_mean, color=CSRT_COLOR, linestyle="--", linewidth=1.0, alpha=0.85,
                         label=f"Pure CSRT mean ({csrt_mean:.1f})")
         ax_line.set_xlim(2, max(len(my_fps), len(csrt_fps)))
@@ -169,14 +169,14 @@ def render_dataset(spec: DatasetSpec) -> None:
         ax_line.tick_params(labelsize=7)
         ax_line.set_title(
             f"{seq_spec['title']} - {sequence}\n"
-            f"Mean FPS: MyTracker {my_mean:.1f} | CSRT {csrt_mean:.1f} | Delta {delta:+.1f}",
+            f"Mean FPS: CA-CSRT {my_mean:.1f} | CSRT {csrt_mean:.1f} | Delta {delta:+.1f}",
             fontsize=9,
             pad=6,
         )
         ax_line.legend(loc="best", fontsize=7, framealpha=0.9)
 
         ax_bar = axes[row_idx, 1]
-        labels = ["MyTracker", "Pure CSRT"]
+        labels = ["CA-CSRT", "Pure CSRT"]
         values = [my_mean, csrt_mean]
         colors = [MY_COLOR, CSRT_COLOR]
         bars = ax_bar.barh(labels, values, color=colors, edgecolor="black", linewidth=0.5)
@@ -198,7 +198,7 @@ def render_dataset(spec: DatasetSpec) -> None:
         dataset_label = "OTB100" if "OTB" in spec.title else "LaSOT head-tail-40"
         ax_bar.set_title(
             f"Per-sequence Mean FPS - {sequence}\n"
-            f"(Dataset {dataset_label} avg: MyTracker {spec.my_dataset_fps:.2f}, "
+            f"(Dataset {dataset_label} avg: CA-CSRT {spec.my_dataset_fps:.2f}, "
             f"CSRT {spec.csrt_dataset_fps:.2f})",
             fontsize=9,
             pad=6,

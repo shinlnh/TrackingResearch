@@ -39,8 +39,8 @@ class TrackerSpec:
 TRACKERS = [
     TrackerSpec(
         key="myeco",
-        label="MyTracker",
-        short_label="MyTracker",
+        label="CA-CSRT",
+        short_label="CA-CSRT",
         color="#1f77b4",
         result_dir=REPO_ROOT
         / "overall_result"
@@ -177,7 +177,7 @@ def plot() -> None:
         gridspec_kw={"width_ratios": [1.38, 1.0], "hspace": 0.34, "wspace": 0.18},
     )
     fig.suptitle(
-        "MyTracker vs OSTrack vs STARK on Representative LaSOT Challenge Sequences",
+        "CA-CSRT vs OSTrack vs STARK on Representative LaSOT Challenge Sequences",
         fontsize=14,
         fontweight="bold",
         y=0.985,
