@@ -41,7 +41,7 @@ class DatasetSpec:
 
 
 OTB_SPEC = DatasetSpec(
-    title="CA-CSRT vs Pure CSRT - OPE Success Plot on OTB100 (Full, 100 sequences)",
+    title="CA-CSRT vs Pure CSRT - OPE Success Plot on OTB100",
     out_stem="otb100_full_mytracker_vs_csrt",
     dataset_type="otb",
     my_result_dir=REPO_ROOT
@@ -62,7 +62,7 @@ OTB_SPEC = DatasetSpec(
 
 
 LASOT_SPEC = DatasetSpec(
-    title="CA-CSRT vs Pure CSRT - OPE Success Plot on LaSOT (Full, 40 sequences)",
+    title="CA-CSRT vs Pure CSRT - OPE Success Plot on LaSOT",
     out_stem="lasot_full_mytracker_vs_csrt",
     dataset_type="lasot",
     my_result_dir=REPO_ROOT

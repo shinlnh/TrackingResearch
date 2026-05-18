@@ -188,7 +188,7 @@ def main(argv: list[str]) -> int:
               f"FPS={row.fps_avg_seq:.2f}  n={row.valid_sequences}")
 
     write_comparison_csv(out_dir / "comparison_lasot_headtail40.csv", lasot_rows)
-    plot_comparison(lasot_rows, "LaSOT head-tail-40",
+    plot_comparison(lasot_rows, "LaSOT",
                     out_dir / "comparison_lasot_headtail40.png")
 
     print()
