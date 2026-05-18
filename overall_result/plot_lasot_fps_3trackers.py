@@ -213,7 +213,7 @@ def plot() -> None:
             f"{t.short_label} {t.dataset_fps_avg:.2f}" for t in TRACKERS
         )
         ax_bar.set_title(
-            f"Per-sequence Mean FPS - {sequence}\n(LaSOT head-tail-40 dataset avg: {dataset_avg})",
+            f"Per-sequence Mean FPS - {sequence}\n(LaSOT dataset avg: {dataset_avg})",
             fontsize=9,
             pad=6,
         )

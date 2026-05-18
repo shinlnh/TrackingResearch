@@ -195,7 +195,7 @@ def render_dataset(spec: DatasetSpec) -> None:
                 fontsize=8,
                 fontweight="bold",
             )
-        dataset_label = "OTB100" if "OTB" in spec.title else "LaSOT head-tail-40"
+        dataset_label = "OTB100" if "OTB" in spec.title else "LaSOT"
         ax_bar.set_title(
             f"Per-sequence Mean FPS - {sequence}\n"
             f"(Dataset {dataset_label} avg: CA-CSRT {spec.my_dataset_fps:.2f}, "
